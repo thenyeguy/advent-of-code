@@ -1,5 +1,7 @@
 module Day19
 
+using LinearAlgebra
+
 #
 # Data loading:
 function load_data()
@@ -14,48 +16,67 @@ end
 
 #
 # Common code:
-translate(scanner, dp) = map(p -> p .+ dp, scanner)
-flip(scanner) = map(t -> (-t[1], -t[2], t[3]), scanner)
-roll(scanner) = map(t -> (t[1], -t[3], t[2]), scanner)
-rotate(scanner) = map(t -> (t[2], t[3], t[1]), scanner)
+translate(p, dp) = p .+ dp
+flip(p) = (-p[1], -p[2], p[3])
+roll(p) = (p[1], -p[3], p[2])
+rotate(p) = (p[2], p[3], p[1])
 
-function all_orientations(scanner)
-    Channel() do channel
-        for i in 1:3
-            scanner = rotate(scanner)
-            for j in 1:4
-                scanner = roll(scanner)
-                put!(channel, scanner)
-                put!(channel, flip(scanner))
+const Point = Tuple{Int, Int, Int}
+const Fingerprint = Set{Float64}
+struct Scanner
+    points::Vector{Point}
+    fingerprints::Vector{Fingerprint}
+end
+
+function compute_fingerprints(points)::Vector{Fingerprint}
+    point_distance(p) = map(p2 -> norm(p2 .- p), points)
+    return points .|> point_distance .|> Set
+end
+
+Scanner(points) = Scanner(points, compute_fingerprints(points))
+
+function points_to_matrix(points)
+    axis(i) = getindex.(points, i)
+    return hcat(axis(1), axis(2), axis(3), ones(length(points)))
+end
+
+function matrix_to_points(mat)
+    r(n) = Int(round(n))
+    return tuple.(r.(mat[:,1]), r.(mat[:,2]), r.(mat[:,3]))
+end
+
+function align_scanners(s1::Scanner, s2::Scanner)
+    points1 = []
+    points2 = []
+    for (p1,f1) in zip(s1.points, s1.fingerprints)
+        for (p2,f2) in zip(s2.points, s2.fingerprints)
+            if length(intersect(f1,f2)) >= 12
+                push!(points1, p1)
+                push!(points2, p2)
+                length(points1) == 12 && @goto aligned
             end
         end
     end
+    return nothing
+    @label aligned
+
+    transform = points_to_matrix(points2) \ points_to_matrix(points1)
+    transformed = matrix_to_points(points_to_matrix(s2.points) * transform)
+    merged = vcat(s1.points, filter(p -> !(p in s1.points), transformed))
+    offset = tuple.(Int.(round.(transform[4,1:3]))...)
+    return Scanner(merged), offset
 end
 
-function align_scanners(s1, s2)
-    points = Set(s1)
-    for oriented in all_orientations(s2)
-        for p1 in s1
-            for p2 in oriented
-                aligned = Set(translate(oriented, p1 .- p2))
-                if length(intersect(points, aligned)) >= 12
-                    return collect(union(points, aligned)), p2 .- p1
-                end
-            end
-        end
-    end
-end
-
-function find_alignment(scanners)
+function align_all_scanners(points)
     positions = [(0,0,0)]
-    scanners = deepcopy(scanners)
+    scanners = Scanner.(points)
     while length(scanners) > 1
         for i in 2:length(scanners)
             result = align_scanners(scanners[1], scanners[i])
             if !isnothing(result)
+                push!(positions, result[2])
                 scanners[1] = result[1]
                 deleteat!(scanners, i)
-                push!(positions, result[2])
                 break
             end
         end
@@ -66,8 +87,8 @@ end
 #
 # Part A:
 function part_a(data)
-    beacons, _ = find_alignment(data)
-    return length(beacons)
+    aligned, _ = align_all_scanners(data)
+    return length(aligned.points)
 end
 
 #
@@ -84,7 +105,7 @@ function largest_distance(positions)
 end
 
 function part_b(data)
-    _, positions = find_alignment(data)
+    _, positions = align_all_scanners(data)
     return largest_distance(positions)
 end
 
