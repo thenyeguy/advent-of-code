@@ -9,16 +9,15 @@ type direction = Left | Right
 type node = { name : string; left : string; right : string }
 type map = { directions : direction Seq.t; nodes : node list }
 
-let node_map (nodes : node list) : node StringMap.t =
-  nodes ||> (fun n -> (n.name, n)) |> StringMap.of_list
+let parse_direction (c : char) : direction =
+  match c with 'L' -> Left | 'R' -> Right
 
 let parse_input (input : string list) : map =
-  let parse_direction c = match c with 'L' -> Left | 'R' -> Right in
-  let make_node n l r = { name = n; left = l; right = r } in
   let parse_node node =
-    Scanf.sscanf node "%[A-Z] = (%[A-Z], %[A-Z])" make_node
+    Scanf.sscanf node "%[A-Z] = (%[A-Z], %[A-Z])" (fun name left right ->
+        { name; left; right })
   in
-  let [ [ head ]; tail ] = Misc.split_blocks input in
+  let (head :: _ :: tail) = input in
   let directions =
     head |> String.explode ||> parse_direction |> List.to_seq |> Seq.cycle
   in
@@ -30,6 +29,9 @@ let puzzle_input () = Io.read_lines "data/08.txt" |> parse_input
 (*
  * Part 1
  *)
+let node_map (nodes : node list) : node StringMap.t =
+  nodes ||> (fun n -> (n.name, n)) |> StringMap.of_list
+
 let next_node (node_map : node StringMap.t) (dir : direction) (node : string) :
     string =
   let node = StringMap.find node node_map in

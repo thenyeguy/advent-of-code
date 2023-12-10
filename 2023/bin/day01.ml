@@ -29,12 +29,10 @@ let get_named_digits (s : string) : char list =
   in
   s |> String.explode |> scan
 
-let rec last (l : 'a list) : 'a = match l with [ x ] -> x | _ :: xs -> last xs
-
 let calibration_value (f : string -> char list) (s : string) : int =
   let ds = f s in
   let first = List.hd ds in
-  let last = last ds in
+  let last = List.last ds in
   int_of_string (Char.escaped first ^ Char.escaped last)
 
 let test_input_one = [ "1abc2"; "pqr3stu8vwx"; "a1b2c3d4e5f"; "treb7uchet" ]

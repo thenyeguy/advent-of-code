@@ -1,5 +1,9 @@
 include Stdlib.List
 
+(* Getters: *)
+let rec last (l : 'a list) : 'a =
+  match l with [] -> raise (Failure "last") | [ x ] -> x | _ :: xs -> last xs
+
 (* Convenient reducers: *)
 let any (l : bool list) : bool = fold_left ( || ) false l
 let all (l : bool list) : bool = fold_left ( && ) true l
@@ -13,5 +17,16 @@ let rec evens (ls : 'a list) : 'a list =
 let rec odds (ls : 'a list) : 'a list =
   match ls with _ :: b :: tail -> b :: odds tail | _ -> []
 
-(* Building new lists: *)
+(* Maps over pairs of elements from the list. *)
+let pair_map (f : 'a -> 'a -> 'b) (l : 'a list) =
+  let head = to_seq l in
+  let tail = to_seq (tl l) in
+  Seq.zip tail head |> Seq.map (fun (l, r) -> f l r) |> of_seq
+
+(* Creates a list with `len` copies of `value`. *)
 let repeated (value : 'a) (len : int) : 'a list = init len (fun _ -> value)
+
+(* Parses a string into a list. * Defaults to an `int list`. *)
+let of_string ?(sep : char = ' ') ?(f : string -> 'a = int_of_string)
+    (s : string) : 'a list =
+  Stdlib.String.split_on_char sep s |> Stdlib.List.map f
