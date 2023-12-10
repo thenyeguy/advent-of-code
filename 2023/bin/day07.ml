@@ -1,20 +1,5 @@
-(*
- * Utility function
- *)
-let read_file (parse : string -> 'a) (fname : string) : 'a list =
-  let rec read_lines (ch : in_channel) : string list =
-    try
-      let line = input_line ch in
-      line :: read_lines ch
-    with End_of_file -> []
-  in
-  let ic = open_in fname in
-  let lines = read_lines ic in
-  close_in ic;
-  List.map parse lines
-
-let left (l, r) = l
-let right (l, r) = r
+open Utils
+open Utils.Infix
 
 (*
  * Input parsing
@@ -38,7 +23,7 @@ let parse_bet (s : string) : hand * int =
   let [ h; b ] = String.split_on_char ' ' s in
   (parse_hand h, int_of_string b)
 
-let puzzle_input = read_file parse_bet "07.txt"
+let puzzle_input = Io.read_lines "data/07.txt" ||> parse_bet
 
 (*
  * Part 1
@@ -80,7 +65,7 @@ let count_cards (h : hand) : (card * int) list =
   Hashtbl.to_seq counts |> List.of_seq |> List.sort compare_counts |> List.rev
 
 let classify_hand (h : hand) : hand_type =
-  match List.map right (count_cards h) with
+  match List.map Tuple.right (count_cards h) with
   | [ 5 ] -> FiveOfAKind
   | 4 :: _ -> FourOfAKind
   | [ 3; 2 ] -> FullHouse
@@ -119,16 +104,16 @@ let jokerfy (h : hand) (value : int) : hand =
 let best_card (h : hand) : card =
   let new_hand = List.filter (fun c -> c != joker) h in
   let counts = count_cards new_hand in
-  match counts with
-  | (c,_)::_ -> c
-  | _ -> joker
+  match counts with (c, _) :: _ -> c | _ -> joker
 
 let compare_joker_hands (left : hand) (right : hand) : int =
   let left_type = best_card left |> jokerfy left |> classify_hand in
   let right_type = best_card right |> jokerfy right |> classify_hand in
   match compare_hand_types left_type right_type with
-  | 0 -> compare_card_strength (jokerfy left 0)( jokerfy right 0)
+  | 0 -> compare_card_strength (jokerfy left 0) (jokerfy right 0)
   | c -> c
 
 let part_two (input : (hand * int) list) =
   compute_winnings compare_joker_hands input
+
+let _ = Runner.main puzzle_input part_one part_two

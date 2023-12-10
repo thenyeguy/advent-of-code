@@ -1,25 +1,4 @@
-(*
- * Utility function
- *)
-let read_file (fname : string) : string list =
-  let rec read_lines (ch : in_channel) : string list =
-    try
-      let line = input_line ch in
-      line :: read_lines ch
-    with End_of_file -> []
-  in
-  let ic = open_in fname in
-  let lines = read_lines ic in
-  close_in ic;
-  lines
-
-let id (x : 'a) : 'a = x
-
-let rec evens (ls : 'a list) : 'a list =
-  match ls with a :: b :: tail -> a :: evens tail | _ -> []
-
-let rec odds (ls : 'a list) : 'a list =
-  match ls with a :: b :: tail -> b :: odds tail | _ -> []
+open Utils
 
 (*
  * Input parsing
@@ -28,21 +7,12 @@ type range = { start : int; rlength : int }
 type mapping = { src : int; dest : int; mlength : int }
 type almanac = { seeds : int list; maps : mapping list list }
 
-let split_blocks (input : string list) : string list list =
-  let accumulate block line =
-    match line with
-    | "" -> ([], Option.some block)
-    | _ -> (List.append block [ line ], Option.none)
-  in
-  let block, blocks = List.fold_left_map accumulate [] input in
-  List.append (List.filter_map id blocks) [ block ]
-
 let parse_numbers (s : string) : int list =
   String.split_on_char ' ' s |> List.filter_map int_of_string_opt
 
 let parse_input (input : string list) : almanac =
   let [ _; seeds_str ] = input |> List.hd |> String.split_on_char ':' in
-  let blocks = input |> split_blocks |> List.tl in
+  let blocks = input |> Misc.split_blocks |> List.tl in
   let parse_block (block : string list) : mapping list =
     let parse_line line =
       let [ d; s; l ] = parse_numbers line in
@@ -52,7 +22,7 @@ let parse_input (input : string list) : almanac =
   in
   { seeds = parse_numbers seeds_str; maps = List.map parse_block blocks }
 
-let puzzle_input () = parse_input (read_file "05.txt")
+let puzzle_input () = Io.read_lines "data/05.txt" |> parse_input
 
 (*
  * Part 1
@@ -98,16 +68,21 @@ let split_range (m : mapping) (r : range) : range option list * range option =
 let map_ranges (rs : range list) (ms : mapping list) : range list =
   let accumulate acc m =
     let rem, mapped = acc |> List.map (split_range m) |> List.split in
-    (rem |> List.flatten |> List.filter_map id, mapped)
+    (rem |> List.flatten |> List.filter_map Misc.id, mapped)
   in
   let acc, mapped = List.fold_left_map accumulate rs ms in
-  List.append (mapped |> List.flatten |> List.filter_map id) acc
+  List.append (mapped |> List.flatten |> List.filter_map Misc.id) acc
 
 let get_locations (ms : mapping list list) (rs : range list) : range list =
   List.fold_left map_ranges rs ms
 
 let part_two (a : almanac) =
   let range_of s l = { start = s; rlength = l } in
-  let ranges = List.map2 range_of (evens a.seeds) (odds a.seeds) in
+  let ranges = List.map2 range_of (List.evens a.seeds) (List.odds a.seeds) in
   let mapped_ranges = get_locations a.maps ranges in
   mapped_ranges |> List.map (fun r -> r.start) |> List.fold_left min max_int
+
+(*
+ * Main function
+ *)
+let _ = Runner.main (puzzle_input ()) part_one part_two

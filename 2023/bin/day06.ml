@@ -1,3 +1,6 @@
+open Utils
+open Utils.Infix
+
 type race = { time : int; distance : int }
 
 let test_input =
@@ -14,8 +17,6 @@ let puzzle_input =
     { time = 91; distance = 1349 };
     { time = 66; distance = 1063 };
   ]
-
-let product = List.fold_left ( * ) 1
 
 let solve_quadratic (a : float) (b : float) (c : float) : float * float =
   (* (-b +/- sqrt(b^2 - 4ac)) / 2a *)
@@ -35,7 +36,9 @@ let ways_to_win_race (r : race) : int =
   in
   truncate upper - truncate lower
 
-let part_one (races : race list) = races |> List.map ways_to_win_race |> product
+let part_one (races : race list) = races ||> ways_to_win_race |> List.product
 
-let part_two () =
+let part_two _ =
   ways_to_win_race { time = 40_82_91_66; distance = 277_1338_1349_1063 }
+
+let _ = Runner.main puzzle_input part_one part_two
