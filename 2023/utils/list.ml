@@ -1,5 +1,12 @@
 include Stdlib.List
 
+(* Creates a list with `len` copies of `value`. *)
+let repeated (value : 'a) (len : int) : 'a list = init len (fun _ -> value)
+
+(* Creates a list containing integers [a,b) *)
+let range ?(lower : int = 0) (upper : int) : int list =
+  init (upper - lower) (fun i -> lower + i)
+
 (* Getters: *)
 let rec last (l : 'a list) : 'a =
   match l with [] -> raise (Failure "last") | [ x ] -> x | _ :: xs -> last xs
@@ -23,8 +30,11 @@ let pair_map (f : 'a -> 'a -> 'b) (l : 'a list) =
   let tail = to_seq (tl l) in
   Seq.zip tail head |> Seq.map (fun (l, r) -> f l r) |> of_seq
 
-(* Creates a list with `len` copies of `value`. *)
-let repeated (value : 'a) (len : int) : 'a list = init len (fun _ -> value)
+(* Returns a list of all combinations of the elements in `list` *)
+let rec combinations (list : 'a list) : ('a * 'a) list =
+  match list with
+  | [] -> []
+  | l :: ls -> append (map (Tuple.pack l) ls) (combinations ls)
 
 (* Parses a string into a list. * Defaults to an `int list`. *)
 let of_string ?(sep : char = ' ') ?(f : string -> 'a = int_of_string)
