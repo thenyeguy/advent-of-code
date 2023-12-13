@@ -1,5 +1,5 @@
 open Utils
-open Utils.Infix
+open Utils.List.Infix
 
 type color = Red | Green | Blue
 type game = { id : int; cubes : (int * color) list list }

@@ -23,7 +23,7 @@ let symbols_in_row (rowi : int) (row : string) : symbol list =
     | '.' -> Option.none
     | _ -> Option.some { sym_pos = (rowi, i); sym = c }
   in
-  String.explode row |> List.mapi symbol_idx |> List.filter_map Misc.id
+  String.explode row |> List.mapi symbol_idx |> List.filter_none
 
 let symbols_in_schematic (schematic : string list) : symbol list =
   List.mapi symbols_in_row schematic |> List.flatten
@@ -45,9 +45,9 @@ let parts_in_row (rowi : int) (row : string) : part list =
     | Some p, '0' .. '9' -> (Option.some (add_to_part p coli c), Option.none)
     | Some p, _ -> (Option.none, Option.some p)
   in
-  let digits = String.explode row |> List.mapi Tuple.pack in
+  let digits = String.explode row |> List.mapi Pair.pack in
   let acc, parts = digits |> List.fold_left_map accumulate_parts Option.none in
-  let parts = List.filter_map Misc.id parts in
+  let parts = List.filter_none parts in
   match acc with Some p -> p :: parts | None -> parts
 
 let parts_in_schematic (schematic : string list) : part list =

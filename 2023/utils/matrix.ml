@@ -1,4 +1,4 @@
-open Infix
+open List.Infix
 
 type 'a t = 'a array array
 

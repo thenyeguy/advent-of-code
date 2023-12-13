@@ -17,6 +17,9 @@ let all (l : bool list) : bool = fold_left ( && ) true l
 let sum (l : int list) : int = fold_left ( + ) 0 l
 let product (l : int list) : int = fold_left ( * ) 1 l
 
+(* Filter out None elements. *)
+let filter_none (l : 'a option list) : 'a list = filter_map Fn.id l
+
 (* Get alternating elements: *)
 let rec evens (ls : 'a list) : 'a list =
   match ls with a :: _ :: tail -> a :: evens tail | _ -> []
@@ -34,9 +37,14 @@ let pair_map (f : 'a -> 'a -> 'b) (l : 'a list) =
 let rec combinations (list : 'a list) : ('a * 'a) list =
   match list with
   | [] -> []
-  | l :: ls -> append (map (Tuple.pack l) ls) (combinations ls)
+  | l :: ls -> append (map (Pair.pack l) ls) (combinations ls)
 
 (* Parses a string into a list. * Defaults to an `int list`. *)
 let of_string ?(sep : char = ' ') ?(f : string -> 'a = int_of_string)
     (s : string) : 'a list =
   Stdlib.String.split_on_char sep s |> Stdlib.List.map f
+
+module Infix = struct
+  (* List.map operator: *)
+  let ( ||> ) (l : 'a list) (f : 'a -> 'b) : 'b list = map f l
+end

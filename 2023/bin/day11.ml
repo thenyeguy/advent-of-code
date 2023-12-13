@@ -1,5 +1,5 @@
 open Utils
-open Utils.Infix
+open Utils.List.Infix
 
 (*
  * Types
@@ -36,7 +36,7 @@ let find_stars ?(expansion : int = 2) (map : char Matrix.t) : coord list =
 
 let part_one (map : char Matrix.t) : int =
   map |> find_stars |> List.combinations
-  ||> Tuple.apply manhattan_distance
+  ||> Pair.apply manhattan_distance
   |> List.sum
 
 (*
@@ -46,7 +46,7 @@ let part_two (map : char Matrix.t) : int =
   map
   |> find_stars ~expansion:1000000
   |> List.combinations
-  ||> Tuple.apply manhattan_distance
+  ||> Pair.apply manhattan_distance
   |> List.sum
 
 (*

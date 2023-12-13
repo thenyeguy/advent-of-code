@@ -1,5 +1,5 @@
 open Utils
-open Utils.Infix
+open Utils.List.Infix
 
 type race = { time : int; distance : int }
 

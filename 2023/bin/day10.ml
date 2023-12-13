@@ -1,5 +1,5 @@
 open Utils
-open Utils.Infix
+open Utils.List.Infix
 
 (*
  * Types
@@ -57,7 +57,7 @@ let count_steps (map : map) : int CoordMap.t =
   bfs [ start ] (CoordMap.singleton start 0) 0
 
 let part_one (map : map) : int =
-  map |> count_steps |> CoordMap.to_list ||> Tuple.right |> List.fold_left max 0
+  map |> count_steps |> CoordMap.to_list ||> Pair.right |> List.fold_left max 0
 
 (*
  * Part 2

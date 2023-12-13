@@ -1,5 +1,5 @@
 open Utils
-open Utils.Infix
+open Utils.List.Infix
 module IntSet = Set.Make (Int)
 
 type card = { winning : int list; numbers : int list }

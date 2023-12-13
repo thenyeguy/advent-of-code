@@ -10,3 +10,13 @@ let read_lines (fname : string) : string list =
   let lines = _read_lines ic in
   close_in ic;
   lines
+
+(* Splits a list of lines into blocks, seperated by empty lines. *)
+let split_blocks (input : string list) : string list list =
+  let accumulate block line =
+    match line with
+    | "" -> ([], Option.some block)
+    | _ -> (List.append block [ line ], Option.none)
+  in
+  let block, blocks = List.fold_left_map accumulate [] input in
+  List.append (List.filter_none blocks) [ block ]

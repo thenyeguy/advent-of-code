@@ -12,7 +12,7 @@ let parse_numbers (s : string) : int list =
 
 let parse_input (input : string list) : almanac =
   let [ _; seeds_str ] = input |> List.hd |> String.split_on_char ':' in
-  let blocks = input |> Misc.split_blocks |> List.tl in
+  let blocks = input |> Io.split_blocks |> List.tl in
   let parse_block (block : string list) : mapping list =
     let parse_line line =
       let [ d; s; l ] = parse_numbers line in
@@ -68,10 +68,10 @@ let split_range (m : mapping) (r : range) : range option list * range option =
 let map_ranges (rs : range list) (ms : mapping list) : range list =
   let accumulate acc m =
     let rem, mapped = acc |> List.map (split_range m) |> List.split in
-    (rem |> List.flatten |> List.filter_map Misc.id, mapped)
+    (rem |> List.flatten |> List.filter_none, mapped)
   in
   let acc, mapped = List.fold_left_map accumulate rs ms in
-  List.append (mapped |> List.flatten |> List.filter_map Misc.id) acc
+  List.append (mapped |> List.flatten |> List.filter_none) acc
 
 let get_locations (ms : mapping list list) (rs : range list) : range list =
   List.fold_left map_ranges rs ms
