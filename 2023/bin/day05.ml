@@ -28,12 +28,12 @@ let puzzle_input () = Io.read_lines "data/05.txt" |> parse_input
  * Part 1
  *)
 let map_value (n : int) (ms : mapping list) : int =
-  let _map (n : int) (m : mapping) : int option =
+  let map_value' (n : int) (m : mapping) : int option =
     let offset = n - m.src in
     if 0 <= offset && offset < m.mlength then Option.some (m.dest + offset)
     else Option.none
   in
-  match List.filter_map (_map n) ms with [ nn ] -> nn | _ -> n
+  match List.filter_map (map_value' n) ms with [ nn ] -> nn | _ -> n
 
 let get_location (a : almanac) (seed : int) : int =
   List.fold_left map_value seed a.maps

@@ -3,7 +3,7 @@ type 'a solution = 'a -> int
 exception Unimplemented
 
 (* Dummy function for unimplemented solutions. *)
-let unimplemented (_input : 'a) : int = raise Unimplemented
+let unimplemented (_ : 'a) : int = raise Unimplemented
 
 (* Util function for running AOC solutions. *)
 let main (input : 'a) (part_one : 'a solution) (part_two : 'a solution) =

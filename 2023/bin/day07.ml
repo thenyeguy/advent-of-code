@@ -98,12 +98,12 @@ let part_one (input : (hand * int) list) = compute_winnings compare_hands input
 let joker = 11
 
 let jokerfy (h : hand) (value : int) : hand =
-  let _jokerfy c = if c == joker then value else c in
-  List.map _jokerfy h
+  let jokerfy' c = if c == joker then value else c in
+  List.map jokerfy' h
 
 let best_card (h : hand) : card =
-  let new_hand = List.filter (fun c -> c != joker) h in
-  let counts = count_cards new_hand in
+  let h' = List.filter (fun c -> c != joker) h in
+  let counts = count_cards h' in
   match counts with (c, _) :: _ -> c | _ -> joker
 
 let compare_joker_hands (left : hand) (right : hand) : int =

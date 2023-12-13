@@ -18,8 +18,8 @@ let count_winning_numbers (c : card) : int =
   IntSet.inter ws ns |> IntSet.cardinal
 
 let score_card (c : card) : int =
-  let rec _score n = match n with 0 -> 0 | 1 -> 1 | _ -> 2 * _score (n - 1) in
-  count_winning_numbers c |> _score
+  let rec score n = match n with 0 -> 0 | 1 -> 1 | _ -> 2 * score (n - 1) in
+  count_winning_numbers c |> score
 
 let score_all_cards (cards : card list) : int =
   let scores = List.map count_winning_numbers cards in

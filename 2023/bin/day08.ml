@@ -40,13 +40,13 @@ let next_node (node_map : node StringMap.t) (dir : direction) (node : string) :
 let count_steps (m : map) (is_end_node : string -> bool)
     (starting_node : string) : int =
   let node_map = node_map m.nodes in
-  let rec _count_steps node dirs steps =
+  let rec count_steps' node dirs steps =
     if is_end_node node then steps
     else
       let (Option.Some (dir, dirs)) = Seq.uncons dirs in
-      _count_steps (next_node node_map dir node) dirs (steps + 1)
+      count_steps' (next_node node_map dir node) dirs (steps + 1)
   in
-  _count_steps starting_node m.directions 0
+  count_steps' starting_node m.directions 0
 
 let part_one (input : map) = count_steps input (( = ) "ZZZ") "AAA"
 

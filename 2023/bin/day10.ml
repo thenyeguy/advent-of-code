@@ -46,12 +46,12 @@ let count_steps (map : map) : int CoordMap.t =
     if List.is_empty frontier then seen
     else
       let is_unseen c = not (CoordMap.mem c seen) in
-      let new_frontier =
+      let frontier' =
         frontier ||> adjacencies map |> List.flatten |> List.filter is_unseen
       in
-      let new_seen = frontier ||> (fun c -> (c, steps)) |> CoordMap.of_list in
-      let map_merge _k l r = Option.some (min l r) in
-      bfs new_frontier (CoordMap.union map_merge seen new_seen) (steps + 1)
+      let seen' = frontier ||> (fun c -> (c, steps)) |> CoordMap.of_list in
+      let map_merge _ l r = Option.some (min l r) in
+      bfs frontier' (CoordMap.union map_merge seen seen') (steps + 1)
   in
   let (Some start) = Matrix.find (( = ) 'S') map in
   bfs [ start ] (CoordMap.singleton start 0) 0
@@ -75,15 +75,15 @@ let remove_unreachable_pipes (map : map) : map =
 (* Doubles the size of the map, adding dummy pipes to maintain connections. *)
 let expand_map (map : map) : map =
   let rows, cols = (Matrix.rows map, Matrix.cols map) in
-  let new_map = Matrix.make ((2 * rows) + 1) ((2 * cols) + 1) '.' in
+  let map' = Matrix.make ((2 * rows) + 1) ((2 * cols) + 1) '.' in
   let copy_pipe r c ch =
-    let dummy_pipe (r2, c2) = new_map.(r2).(c2) <- '+' in
-    let new_r, new_c = ((2 * r) + 1, (2 * c) + 1) in
-    new_map.(new_r).(new_c) <- ch;
-    adjacencies new_map (new_r, new_c) |> List.iter dummy_pipe
+    let dummy_pipe (r2, c2) = map'.(r2).(c2) <- '+' in
+    let r', c' = ((2 * r) + 1, (2 * c) + 1) in
+    map'.(r').(c') <- ch;
+    adjacencies map' (r', c') |> List.iter dummy_pipe
   in
   Matrix.iteri copy_pipe map;
-  new_map
+  map'
 
 (* Fills all tiles reachable from outside the pipe with xs. *)
 let flood_fill (map : map) : map =
