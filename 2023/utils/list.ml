@@ -17,6 +17,9 @@ let all (l : bool list) : bool = fold_left ( && ) true l
 let sum (l : int list) : int = fold_left ( + ) 0 l
 let product (l : int list) : int = fold_left ( * ) 1 l
 
+let count (f : 'a -> bool) (l : 'a list) : int =
+  fold_left (fun c v -> c + if f v then 1 else 0) 0 l
+
 (* Filter out None elements. *)
 let filter_none (l : 'a option list) : 'a list = filter_map Fn.id l
 
@@ -47,4 +50,7 @@ let of_string ?(sep : char = ' ') ?(f : string -> 'a = int_of_string)
 module Infix = struct
   (* List.map operator: *)
   let ( ||> ) (l : 'a list) (f : 'a -> 'b) : 'b list = map f l
+
+  (* Append operator: *)
+  let ( @ ) = append
 end
