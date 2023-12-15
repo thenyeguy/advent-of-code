@@ -3,9 +3,10 @@ include Stdlib.List
 (* Creates a list with `len` copies of `value`. *)
 let repeated (value : 'a) (len : int) : 'a list = init len (fun _ -> value)
 
-(* Creates a list containing integers [a,b) *)
-let range ?(lower : int = 0) (upper : int) : int list =
-  init (upper - lower) (fun i -> lower + i)
+(* Creates a list containing integers [from,to) *)
+let range ?(from : int = 0) (to_ : int) : int list =
+  if from < to_ then init (to_ - from) (fun i -> from + i)
+  else init (from - to_) (fun i -> from - i)
 
 (* Getters: *)
 let rec last (l : 'a list) : 'a =
@@ -35,6 +36,10 @@ let pair_map (f : 'a -> 'a -> 'b) (l : 'a list) =
   let head = to_seq l in
   let tail = to_seq (tl l) in
   Seq.zip tail head |> Seq.map (fun (l, r) -> f l r) |> of_seq
+
+(* List equivalent to Seq.group. *)
+let group (g : 'a -> 'a -> bool) (l : 'a list) : 'a list list =
+  l |> to_seq |> Seq.group g |> of_seq |> map of_seq
 
 (* Returns a list of all combinations of the elements in `list` *)
 let rec combinations (list : 'a list) : ('a * 'a) list =
