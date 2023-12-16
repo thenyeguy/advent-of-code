@@ -1,3 +1,10 @@
+(* Reads a file into a string. *)
+let read_file (fname : string) : string =
+  let ic = open_in fname in
+  let s = In_channel.input_all ic in
+  close_in ic;
+  s
+
 (* Reads a file into a list line-by-line. *)
 let read_lines (fname : string) : string list =
   let rec read_lines' (ch : in_channel) : string list =
