@@ -11,6 +11,7 @@ let of_strings (lines : string list) : char t =
 
 let rows (m : 'a t) : int = Array.length m
 let cols (m : 'a t) : int = Array.length m.(0)
+let size (m : 'a t) : int * int = (rows m, cols m)
 let get (m : 'a t) (row : int) (col : int) : 'a = m.(row).(col)
 let set (m : 'a t) (row : int) (col : int) (v : 'a) : unit = m.(row).(col) <- v
 

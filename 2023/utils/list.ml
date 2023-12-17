@@ -17,6 +17,7 @@ let any (l : bool list) : bool = fold_left ( || ) false l
 let all (l : bool list) : bool = fold_left ( && ) true l
 let sum (l : int list) : int = fold_left ( + ) 0 l
 let product (l : int list) : int = fold_left ( * ) 1 l
+let max (l : int list) : int = fold_left max min_int l
 
 let count (f : 'a -> bool) (l : 'a list) : int =
   fold_left (fun c v -> c + if f v then 1 else 0) 0 l
