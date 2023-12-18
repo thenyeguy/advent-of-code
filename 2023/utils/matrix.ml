@@ -15,6 +15,9 @@ let size (m : 'a t) : int * int = (rows m, cols m)
 let get (m : 'a t) (row : int) (col : int) : 'a = m.(row).(col)
 let set (m : 'a t) (row : int) (col : int) (v : 'a) : unit = m.(row).(col) <- v
 
+let in_bounds (m : 'a t) (row : int) (col : int) =
+  0 <= row && row < rows m && 0 <= col && col < cols m
+
 let transpose (m : 'a array array) : 'a array array =
   m |> Array.to_seq |> Seq.map Array.to_seq |> Seq.transpose
   |> Seq.map Array.of_seq |> Array.of_seq

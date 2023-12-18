@@ -8,6 +8,11 @@ let range ?(from : int = 0) (to_ : int) : int list =
   if from < to_ then init (to_ - from) (fun i -> from + i)
   else init (from - to_) (fun i -> from - i)
 
+(* Creates a list containing integers [from,to] *)
+let irange ?(from : int = 0) (to_ : int) : int list =
+  if from < to_ then init (to_ - from + 1) (fun i -> from + i)
+  else init (from - to_ + 1) (fun i -> from - i)
+
 (* Getters: *)
 let rec last (l : 'a list) : 'a =
   match l with [] -> raise (Failure "last") | [ x ] -> x | _ :: xs -> last xs

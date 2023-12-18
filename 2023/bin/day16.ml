@@ -24,7 +24,7 @@ let puzzle_input = Io.read_lines "data/16.txt" |> Matrix.of_strings
  *)
 let in_bounds (tiles : char Matrix.t) (b : beam) : bool =
   let r, c = b.coord in
-  0 <= r && r < Matrix.rows tiles && 0 <= c && c < Matrix.cols tiles
+  Matrix.in_bounds tiles r c
 
 let step (tiles : char Matrix.t) (b : beam) : beam list =
   let r, c = b.coord in
