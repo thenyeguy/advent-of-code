@@ -1,20 +1,7 @@
 open Utils
 
-type coord = int * int
-type symbol = { sym_pos : coord; sym : char }
-type part = { part_pos : coord list; num : int }
-
-let adjacent_coords ((row, col) : coord) : coord list =
-  [
-    (row - 1, col - 1);
-    (row - 1, col);
-    (row - 1, col + 1);
-    (row, col - 1);
-    (row, col + 1);
-    (row + 1, col - 1);
-    (row + 1, col);
-    (row + 1, col + 1);
-  ]
+type symbol = { sym_pos : Coord.t; sym : char }
+type part = { part_pos : Coord.t list; num : int }
 
 let symbols_in_row (rowi : int) (row : string) : symbol list =
   let symbol_idx i c =
@@ -56,11 +43,11 @@ let parts_in_schematic (schematic : string list) : part list =
 let has_adjacent_symbol (symbols : symbol list) (part : part) : bool =
   let symbol_coords = List.map (fun s -> s.sym_pos) symbols in
   let is_symbol c = List.mem c symbol_coords in
-  List.map adjacent_coords part.part_pos
+  List.map Coord.adjacencies part.part_pos
   |> List.flatten |> List.exists is_symbol
 
 let adjacent_parts (parts : part list) (symbol : symbol) : part list =
-  let cs = adjacent_coords symbol.sym_pos in
+  let cs = Coord.adjacencies symbol.sym_pos in
   let is_adjacent c = List.mem c cs in
   let is_adjacent_part p = List.exists is_adjacent p.part_pos in
   List.filter is_adjacent_part parts

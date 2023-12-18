@@ -2,14 +2,6 @@ open Utils
 open Utils.List.Infix
 
 (*
- * Types
- *)
-type coord = int * int (* row * col *)
-
-let manhattan_distance ((r1, c1) : coord) ((r2, c2) : coord) : int =
-  abs (r1 - r2) + abs (c1 - c2)
-
-(*
  * Parse input
  *)
 let puzzle_input () = Io.read_lines "data/11.txt" |> Matrix.of_strings
@@ -17,7 +9,7 @@ let puzzle_input () = Io.read_lines "data/11.txt" |> Matrix.of_strings
 (*
  * Part 1
  *)
-let find_stars ?(expansion : int = 2) (map : char Matrix.t) : coord list =
+let find_stars ?(expansion : int = 2) (map : char Matrix.t) : Coord.t list =
   (* Convert to a bool matrix. *)
   let empties = Matrix.map (( = ) '.') map in
   (* Expand empty rows to create a new coordinate row/col mapping. *)
@@ -36,7 +28,7 @@ let find_stars ?(expansion : int = 2) (map : char Matrix.t) : coord list =
 
 let part_one (map : char Matrix.t) : int =
   map |> find_stars |> List.combinations
-  ||> Pair.apply manhattan_distance
+  ||> Pair.apply Coord.manhattan_distance
   |> List.sum
 
 (*
@@ -46,7 +38,7 @@ let part_two (map : char Matrix.t) : int =
   map
   |> find_stars ~expansion:1000000
   |> List.combinations
-  ||> Pair.apply manhattan_distance
+  ||> Pair.apply Coord.manhattan_distance
   |> List.sum
 
 (*

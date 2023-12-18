@@ -11,11 +11,11 @@ let of_strings (lines : string list) : char t =
 
 let rows (m : 'a t) : int = Array.length m
 let cols (m : 'a t) : int = Array.length m.(0)
-let size (m : 'a t) : int * int = (rows m, cols m)
-let get (m : 'a t) (row : int) (col : int) : 'a = m.(row).(col)
-let set (m : 'a t) (row : int) (col : int) (v : 'a) : unit = m.(row).(col) <- v
+let size (m : 'a t) : Coord.t = (rows m, cols m)
+let get (m : 'a t) ((row, col) : Coord.t) : 'a = m.(row).(col)
+let set (m : 'a t) ((row, col) : Coord.t) (v : 'a) : unit = m.(row).(col) <- v
 
-let in_bounds (m : 'a t) (row : int) (col : int) =
+let in_bounds (m : 'a t) ((row, col) : Coord.t) =
   0 <= row && row < rows m && 0 <= col && col < cols m
 
 let transpose (m : 'a array array) : 'a array array =

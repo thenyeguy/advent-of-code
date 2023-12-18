@@ -4,18 +4,13 @@ open Utils.List.Infix
 (*
  * Types
  *)
-type coord = int * int (* row,col *)
-type dir = Up | Down | Left | Right
 type map = int Matrix.t
 
 module Search = Search.Make (struct
-  type t = coord * dir
+  type t = Coord.t * Coord.dir
 
   let compare = compare
 end)
-
-let orthogonals (d : dir) : dir list =
-  if d = Up || d = Down then [ Left; Right ] else [ Up; Down ]
 
 (*
  * Parse input
@@ -34,18 +29,11 @@ let puzzle_input =
 let neighbors ~(min_steps : int) ~(max_steps : int) (map : map)
     ((coord, dir) : Search.node) : Search.node list =
   let steps dir =
-    let step n =
-      let r, c = coord in
-      match dir with
-      | Up -> ((r - n, c), dir)
-      | Down -> ((r + n, c), dir)
-      | Left -> ((r, c - n), dir)
-      | Right -> ((r, c + n), dir)
-    in
+    let step n = (Coord.step ~steps:n dir coord, dir) in
     List.range ~from:min_steps (max_steps + 1) ||> step
   in
-  dir |> orthogonals |> List.concat_map steps
-  |> List.filter (fun ((r, c), _) -> Matrix.in_bounds map r c)
+  dir |> Coord.orthogonals |> List.concat_map steps
+  |> List.filter (fun (c, _) -> Matrix.in_bounds map c)
 
 let get_cost (map : map) ((src, _) : Search.node) ((dest, dir) : Search.node) :
     int =
@@ -57,7 +45,7 @@ let get_cost (map : map) ((src, _) : Search.node) ((dest, dir) : Search.node) :
     | Left -> List.irange ~from:(cs - 1) cd ||> fun c -> (rd, c)
     | Right -> List.irange ~from:(cs + 1) cd ||> fun c -> (rd, c)
   in
-  steps ||> Pair.apply (Matrix.get map) |> List.sum
+  steps ||> Matrix.get map |> List.sum
 
 let is_done (map : map) ((coord, _) : Search.node) : bool =
   let dest = (Matrix.rows map - 1, Matrix.cols map - 1) in
