@@ -4,6 +4,9 @@ type t = int * int
 (* A directional type. *)
 type dir = Up | Down | Left | Right
 
+(* Make the module orderable. *)
+let compare = compare
+
 (* Coordinate containers: *)
 module Set = Set.Make (struct
   type t = int * int

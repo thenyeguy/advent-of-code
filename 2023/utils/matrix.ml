@@ -18,6 +18,9 @@ let set (m : 'a t) ((row, col) : Coord.t) (v : 'a) : unit = m.(row).(col) <- v
 let in_bounds (m : 'a t) ((row, col) : Coord.t) =
   0 <= row && row < rows m && 0 <= col && col < cols m
 
+let get_opt (m : 'a t) (c : Coord.t) : 'a option =
+  if in_bounds m c then Option.some (get m c) else Option.none
+
 let transpose (m : 'a array array) : 'a array array =
   m |> Array.to_seq |> Seq.map Array.to_seq |> Seq.transpose
   |> Seq.map Array.of_seq |> Array.of_seq

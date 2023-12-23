@@ -82,4 +82,26 @@ module Make (Node : OrderedType) = struct
             (dfs [@tailcall]) q'' seen'
     in
     dfs (PQueue.of_values starts) HistorySet.empty
+
+  (* Finds the maximum cost path through a given graph, given:
+   *  - neighbors: a function from a node to its adjacent nodes
+   *  - cost src dest: a function that returns the cost of a given edge
+   *  - is_done: a function indicating if the given node is an end state
+   *  - starts: a list of nodes to start the search
+   *)
+  let find_longest_path (neighbors : node -> node list)
+      (get_cost : node -> node -> int) (is_done : node -> bool) (start : node) :
+      int =
+    let open List.Infix in
+    let rec get_path' (seen : HistorySet.t) (cost : int) (node : node) : int =
+      if is_done node then cost
+      else
+        let seen' = HistorySet.add node seen in
+        let is_unseen n = HistorySet.mem n seen |> not in
+        let get_path'' node' =
+          get_path' seen' (cost + get_cost node node') node'
+        in
+        neighbors node |> List.filter is_unseen ||> get_path'' |> List.max
+    in
+    get_path' HistorySet.empty 0 start
 end
