@@ -56,7 +56,8 @@ let rec combinations (list : 'a list) : ('a * 'a) list =
 (* Parses a string into a list. * Defaults to an `int list`. *)
 let of_string ?(sep : char = ' ') ?(f : string -> 'a = int_of_string)
     (s : string) : 'a list =
-  Stdlib.String.split_on_char sep s |> Stdlib.List.map f
+  let open Fn.Infix in
+  Stdlib.String.split_on_char sep s |> Stdlib.List.map (Stdlib.String.trim >> f)
 
 module Infix = struct
   (* List.map operator: *)
