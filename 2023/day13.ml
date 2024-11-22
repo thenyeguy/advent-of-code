@@ -5,7 +5,7 @@ open Utils.List.Infix
  * Parse input
  *)
 let puzzle_input =
-  Io.read_lines "data/13.txt" |> Io.split_blocks ||> Matrix.of_strings
+  Io.read_lines "2023/data/13.txt" |> Io.split_blocks ||> Matrix.of_strings
 
 (*
  * Part 1

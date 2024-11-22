@@ -18,7 +18,7 @@ let parse_component (line : string) : component =
   let [ name; edges ] = String.split_on_char ':' line in
   { name; edges = edges |> String.trim |> String.split_on_char ' ' }
 
-let puzzle_input = Io.read_lines "data/25.txt" ||> parse_component
+let puzzle_input = Io.read_lines "2023/data/25.txt" ||> parse_component
 
 (*
  * Part 1

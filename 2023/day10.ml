@@ -10,7 +10,7 @@ type map = char Matrix.t
  * Parse input
  *)
 let parse_map = Matrix.of_strings
-let puzzle_input = Io.read_lines "data/10.txt" |> parse_map
+let puzzle_input = Io.read_lines "2023/data/10.txt" |> parse_map
 
 (*
  * Part 1

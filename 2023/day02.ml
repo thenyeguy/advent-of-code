@@ -36,7 +36,7 @@ let cube_power (g : game) : int =
   let r, g, b = fewest_cubes g in
   r * g * b
 
-let puzzle_input = Io.read_lines "data/02.txt" ||> parse_game
+let puzzle_input = Io.read_lines "2023/data/02.txt" ||> parse_game
 
 let part_one (input : game list) =
   input |> List.filter is_game_possible ||> (fun g -> g.id) |> List.sum

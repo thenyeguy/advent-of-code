@@ -1,11 +1,11 @@
 (lang dune 3.11)
 
-(name aoc_2023)
+(name aoc)
 
 (authors "Michael Nye")
 
 (package
- (name aoc_2023)
- (synopsis "Advent of Code 2023 solutions")
+ (name aoc)
+ (synopsis "Advent of Code solutions")
  (depends ocaml dune)
  (allow_empty))

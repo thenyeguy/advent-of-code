@@ -57,7 +57,7 @@ let gear_ratio (parts : part list) (symbol : symbol) : int option =
   | '*', p1 :: p2 :: _ -> Option.some (p1.num * p2.num)
   | _ -> Option.none
 
-let puzzle_input () = Io.read_lines "data/03.txt"
+let puzzle_input () = Io.read_lines "2023/data/03.txt"
 
 let part_one (input : string list) =
   let symbols = symbols_in_schematic input in

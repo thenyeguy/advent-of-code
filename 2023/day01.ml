@@ -48,7 +48,7 @@ let test_input_two =
     "7pqrstsixteen";
   ]
 
-let puzzle_input : string list = Io.read_lines "data/01.txt"
+let puzzle_input : string list = Io.read_lines "2023/data/01.txt"
 
 let part_one input =
   let values = List.map (calibration_value get_digits) input in

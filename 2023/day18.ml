@@ -16,7 +16,7 @@ let parse_trench (line : string) : trench =
   let build_trench dir length color = { dir = parse_dir dir; length; color } in
   Scanf.sscanf line "%c %d (#%[0-9a-z])" build_trench
 
-let puzzle_input = Io.read_lines "data/18.txt" ||> parse_trench
+let puzzle_input = Io.read_lines "2023/data/18.txt" ||> parse_trench
 
 (*
  * Part 1

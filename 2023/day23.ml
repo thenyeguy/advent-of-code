@@ -14,7 +14,7 @@ let print_coord (r, c) = Printf.printf "(%d,%d)" r c
 (*
  * Parse input
  *)
-let puzzle_input = Io.read_lines "data/23.txt" |> Matrix.of_strings
+let puzzle_input = Io.read_lines "2023/data/23.txt" |> Matrix.of_strings
 
 (*
  * Part 1

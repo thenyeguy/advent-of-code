@@ -24,7 +24,7 @@ let parse_input (input : string list) : map =
   let nodes = tail ||> parse_node in
   { directions; nodes }
 
-let puzzle_input () = Io.read_lines "data/08.txt" |> parse_input
+let puzzle_input () = Io.read_lines "2023/data/08.txt" |> parse_input
 
 (*
  * Part 1

@@ -36,7 +36,7 @@ let parse_brick (line : string) : brick =
   let [ left; right ] = String.split_on_char '~' line in
   (parse_coord left, parse_coord right)
 
-let puzzle_input = Io.read_lines "data/22.txt" ||> parse_brick
+let puzzle_input = Io.read_lines "2023/data/22.txt" ||> parse_brick
 
 (*
  * Part 1

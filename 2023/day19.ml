@@ -51,7 +51,7 @@ let parse_input (lines : string list) : input =
   let [ workflows; parts ] = Io.split_blocks lines in
   (List.map parse_workflow workflows, List.map parse_part parts)
 
-let puzzle_input = Io.read_lines "data/19.txt" |> parse_input
+let puzzle_input = Io.read_lines "2023/data/19.txt" |> parse_input
 
 (*
  * Part 1

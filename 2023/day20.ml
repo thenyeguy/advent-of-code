@@ -35,7 +35,7 @@ let parse_module (line : string) : comm_module =
       let name = if type_ = Broadcaster then "broadcaster" else name in
       { name; type_; outputs })
 
-let puzzle_input = Io.read_lines "data/20.txt" ||> parse_module
+let puzzle_input = Io.read_lines "2023/data/20.txt" ||> parse_module
 
 (*
  * Part 1

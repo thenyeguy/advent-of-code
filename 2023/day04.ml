@@ -39,7 +39,7 @@ let score_all_cards (cards : card list) : int =
   let _, card_counts = List.fold_left_map accumulate acc scores in
   List.sum card_counts
 
-let puzzle_input = Io.read_lines "data/04.txt" ||> parse_card
+let puzzle_input = Io.read_lines "2023/data/04.txt" ||> parse_card
 let part_one (cards : card list) = cards ||> score_card |> List.sum
 let part_two (cards : card list) = score_all_cards cards
 let _ = Runner.main puzzle_input part_one part_two

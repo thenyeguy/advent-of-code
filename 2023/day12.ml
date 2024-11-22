@@ -32,7 +32,7 @@ let parse_row (line : string) : row =
   let runs = List.of_string ~sep:',' runs in
   { springs; runs }
 
-let puzzle_input () = Io.read_lines "data/12.txt" ||> parse_row
+let puzzle_input () = Io.read_lines "2023/data/12.txt" ||> parse_row
 
 (*
  * Part 1

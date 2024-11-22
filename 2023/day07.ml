@@ -23,7 +23,7 @@ let parse_bet (s : string) : hand * int =
   let [ h; b ] = String.split_on_char ' ' s in
   (parse_hand h, int_of_string b)
 
-let puzzle_input = Io.read_lines "data/07.txt" ||> parse_bet
+let puzzle_input = Io.read_lines "2023/data/07.txt" ||> parse_bet
 
 (*
  * Part 1

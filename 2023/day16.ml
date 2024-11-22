@@ -9,7 +9,7 @@ type beam = { coord : Coord.t; dir : Coord.dir }
 (*
  * Parse input
  *)
-let puzzle_input = Io.read_lines "data/16.txt" |> Matrix.of_strings
+let puzzle_input = Io.read_lines "2023/data/16.txt" |> Matrix.of_strings
 
 (*
  * Part 1

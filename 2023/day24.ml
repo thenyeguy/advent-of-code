@@ -19,7 +19,7 @@ let parse_hailstone (line : string) : hailstone =
   let [ pos; velocity ] = String.split_on_char '@' line ||> parse_vec3 in
   { pos; velocity }
 
-let puzzle_input = Io.read_lines "data/24.txt" ||> parse_hailstone
+let puzzle_input = Io.read_lines "2023/data/24.txt" ||> parse_hailstone
 
 (*
  * Part 1

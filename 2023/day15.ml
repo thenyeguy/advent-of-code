@@ -17,7 +17,7 @@ let parse_operation (s : string) : operation =
       Scanf.sscanf s "%[a-z]=%d" (fun label focal_length ->
           Push { label; focal_length })
 
-let puzzle_input = Io.read_file "data/15.txt" |> String.split_on_char ','
+let puzzle_input = Io.read_file "2023/data/15.txt" |> String.split_on_char ','
 
 (*
  * Part 1

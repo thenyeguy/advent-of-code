@@ -21,7 +21,8 @@ let int_of_digit (c : char) : int =
   | _ -> raise (Failure "int_of_digit")
 
 let puzzle_input =
-  Io.read_lines "data/17.txt" |> Matrix.of_strings |> Matrix.map int_of_digit
+  Io.read_lines "2023/data/17.txt"
+  |> Matrix.of_strings |> Matrix.map int_of_digit
 
 (*
  * Part 1

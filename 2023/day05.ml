@@ -22,7 +22,7 @@ let parse_input (input : string list) : almanac =
   in
   { seeds = parse_numbers seeds_str; maps = List.map parse_block blocks }
 
-let puzzle_input () = Io.read_lines "data/05.txt" |> parse_input
+let puzzle_input () = Io.read_lines "2023/data/05.txt" |> parse_input
 
 (*
  * Part 1
