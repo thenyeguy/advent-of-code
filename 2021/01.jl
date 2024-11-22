@@ -1,7 +1,7 @@
 module Day1
 
 function load_data()
-    return parse.(Int, eachline(joinpath(@__DIR__, "01.txt")))
+    return parse.(Int, eachline(joinpath(@__DIR__, "data", "01.txt")))
 end
 
 function part_a(data)

@@ -1,7 +1,7 @@
 module Day7
 
 function load_data()
-    return parse.(Int, split(read(joinpath(@__DIR__, "07.txt"), String), ","))
+    return parse.(Int, split(read(joinpath(@__DIR__, "data", "07.txt"), String), ","))
 end
 
 function find_minimum_fuel(compute_consumption, data)

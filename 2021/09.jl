@@ -3,7 +3,7 @@ module Day9
 #
 # Data loading:
 function load_data()
-    lines = eachline(joinpath(@__DIR__, "09.txt"))
+    lines = eachline(joinpath(@__DIR__, "data", "09.txt"))
     return mapreduce(l -> parse.(Int, split(l, "")), hcat, lines)
 end
 

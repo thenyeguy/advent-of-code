@@ -1,7 +1,7 @@
 module Day6
 
 function load_data()
-    return read(joinpath(@__DIR__, "06.txt"), String)
+    return read(joinpath(@__DIR__, "data", "06.txt"), String)
 end
 
 function find_marker(signal, marker_len)

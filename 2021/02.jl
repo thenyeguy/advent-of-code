@@ -11,7 +11,7 @@ function parse_command(line)
 end
 
 function load_commands()
-    return parse_command.(eachline(joinpath(@__DIR__, "02.txt")))
+    return parse_command.(eachline(joinpath(@__DIR__, "data", "02.txt")))
 end
 
 function part_a(commands)

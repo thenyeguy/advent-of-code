@@ -23,7 +23,7 @@ function parse_blueprint(line)
 end
 
 function load_data()
-    return parse_blueprint.(eachline(joinpath(@__DIR__, "19.txt")))
+    return parse_blueprint.(eachline(joinpath(@__DIR__, "data", "19.txt")))
 end
 
 function max_ore_cost(blueprint)

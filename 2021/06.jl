@@ -1,7 +1,7 @@
 module Day6
 
 function load_data()
-    return parse.(Int, split(read(joinpath(@__DIR__, "06.txt"), String), ","))
+    return parse.(Int, split(read(joinpath(@__DIR__, "data", "06.txt"), String), ","))
 end
 
 function breed_lanternfish(data, generations)

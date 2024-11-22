@@ -10,7 +10,7 @@ function load_data()
         is = eachmatch(r"-?\d+", l) |> collect .|> m->parse(Int,getfield(m,:match))
         return (on, (is[1]:is[2], is[3]:is[4], is[5]:is[6]))
     end
-    return parse_line.(eachline(joinpath(@__DIR__, "22.txt")))
+    return parse_line.(eachline(joinpath(@__DIR__, "data", "22.txt")))
 end
 
 #

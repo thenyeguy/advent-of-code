@@ -3,7 +3,7 @@ module Day18
 using DataStructures
 
 function load_data()
-    return map.(l -> parse.(Int, l), split.(eachline(joinpath(@__DIR__, "18.txt")), ","))
+    return map.(l -> parse.(Int, l), split.(eachline(joinpath(@__DIR__, "data", "18.txt")), ","))
 end
 
 # Returns the center points of each cube's face.

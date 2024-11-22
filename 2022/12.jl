@@ -7,7 +7,7 @@ function to_matrix(lines)
 end
 
 function load_data()
-    return to_matrix(eachline(joinpath(@__DIR__, "12.txt")))
+    return to_matrix(eachline(joinpath(@__DIR__, "data", "12.txt")))
 end
 
 function neighbors(data, idx)

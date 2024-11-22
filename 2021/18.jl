@@ -3,7 +3,7 @@ module Day18
 #
 # Data loading:
 function load_data()
-    return eachline(joinpath(@__DIR__, "18.txt")) .|> Meta.parse .|> eval
+    return eachline(joinpath(@__DIR__, "data", "18.txt")) .|> Meta.parse .|> eval
 end
 
 #

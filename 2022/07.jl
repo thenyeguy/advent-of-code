@@ -38,7 +38,7 @@ function parse_directory_tree(lines)
 end
 
 function load_data()
-    return parse_directory_tree(eachline(joinpath(@__DIR__, "07.txt")))
+    return parse_directory_tree(eachline(joinpath(@__DIR__, "data", "07.txt")))
 end
 
 function traverse(dir, fn)

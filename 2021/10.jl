@@ -5,7 +5,7 @@ using Statistics
 #
 # Data loading:
 function load_data()
-    return collect(eachline(joinpath(@__DIR__, "10.txt")))
+    return collect(eachline(joinpath(@__DIR__, "data", "10.txt")))
 end
 
 #

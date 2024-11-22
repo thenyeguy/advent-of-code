@@ -1,7 +1,7 @@
 module Day3
 
 function load_data()
-    return collect(eachline(joinpath(@__DIR__, "03.txt")))
+    return collect(eachline(joinpath(@__DIR__, "data", "03.txt")))
 end
 
 function most_common_bit(data, i)

@@ -21,7 +21,7 @@ function Base.show(io::IO, c::Code)
 end
 
 function load_data()
-    return parse_entry.(eachline(joinpath(@__DIR__, "08.txt")))
+    return parse_entry.(eachline(joinpath(@__DIR__, "data", "08.txt")))
 end
 
 #

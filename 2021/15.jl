@@ -5,7 +5,7 @@ using DataStructures
 #
 # Data loading:
 function load_data()
-    lines = eachline(joinpath(@__DIR__, "15.txt"))
+    lines = eachline(joinpath(@__DIR__, "data", "15.txt"))
     return mapreduce(l -> parse.(Int, split(l, "")), hcat, lines)
 end
 

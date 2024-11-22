@@ -3,7 +3,7 @@ module Day20
 #
 # Data loading:
 function load_data()
-    open(joinpath(@__DIR__, "20.txt"), "r") do io
+    open(joinpath(@__DIR__, "data", "20.txt"), "r") do io
         algorithm = readline(io) |> collect .|> ==('#') .|> Int
         readline(io)
         image = hcat(collect.(readlines(io))...) .|> ==('#') .|> Int

@@ -8,7 +8,7 @@ struct Fold
 end
 
 function load_data()
-    f = read(joinpath(@__DIR__, "13.txt"), String)
+    f = read(joinpath(@__DIR__, "data", "13.txt"), String)
     (dots_str, folds_str) = split(f, "\n\n")
 
     dots = map(l -> tuple(parse.(Int, split(l, ","))...), split(dots_str))

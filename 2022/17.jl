@@ -1,7 +1,7 @@
 module Day17
 
 function load_data()
-    return read(joinpath(@__DIR__, "17.txt"), String)
+    return read(joinpath(@__DIR__, "data", "17.txt"), String)
 end
 
 const ROCKS::Array{Matrix{Bool}} = [

@@ -3,7 +3,7 @@ module Day16
 #
 # Data loading:
 function load_data()
-    return read(joinpath(@__DIR__, "16.txt"), String)
+    return read(joinpath(@__DIR__, "data", "16.txt"), String)
 end
 
 #

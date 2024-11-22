@@ -1,7 +1,7 @@
 module Day1
 
 function load_data()
-    data = split(read(joinpath(@__DIR__, "01.txt"), String), "\n\n")
+    data = split(read(joinpath(@__DIR__, "data", "01.txt"), String), "\n\n")
     return map(e -> parse.(Int, split(e, "\n")), data)
 end
 

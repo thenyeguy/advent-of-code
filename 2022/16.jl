@@ -17,7 +17,7 @@ function parse_valve(line)
 end
 
 function load_data()
-    return parse_valve.(eachline(joinpath(@__DIR__, "16.txt")))
+    return parse_valve.(eachline(joinpath(@__DIR__, "data", "16.txt")))
 end
 
 struct Layout

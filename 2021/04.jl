@@ -1,7 +1,7 @@
 module Day4
 
 function load_data()
-    data = split(read(joinpath(@__DIR__, "04.txt"), String), "\n\n")
+    data = split(read(joinpath(@__DIR__, "data", "04.txt"), String), "\n\n")
     numbers = parse.(Int, split(data[1], ","))
     boards = map(b -> reshape(parse.(Int, split(b)), 5, 5), data[2:end])
     return numbers, boards

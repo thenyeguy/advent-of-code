@@ -5,7 +5,7 @@ function load_data()
         dir, steps = split(line, " ")
         return (dir, parse(Int, steps))
     end
-    return parse_line.(eachline(joinpath(@__DIR__, "09.txt")))
+    return parse_line.(eachline(joinpath(@__DIR__, "data", "09.txt")))
 end
 
 function move(rope, dir_str)

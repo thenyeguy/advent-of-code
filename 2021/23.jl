@@ -5,7 +5,7 @@ using DataStructures
 #
 # Data loading:
 function load_data()
-    lines = collect(eachline(joinpath(@__DIR__, "23.txt")))
+    lines = collect(eachline(joinpath(@__DIR__, "data", "23.txt")))
     return map(i -> getindex.(lines[4:-1:3], i), [4, 6, 8, 10])
 end
 

@@ -13,7 +13,7 @@ function parse_sensor(line)
 end
 
 function load_data()
-    return parse_sensor.(eachline(joinpath(@__DIR__, "15.txt")))
+    return parse_sensor.(eachline(joinpath(@__DIR__, "data", "15.txt")))
 end
 
 function get_range(sensor, row)

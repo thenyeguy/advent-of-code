@@ -1,7 +1,7 @@
 module Day25
 
 function load_data()
-    return collect(eachline(joinpath(@__DIR__, "25.txt")))
+    return collect(eachline(joinpath(@__DIR__, "data", "25.txt")))
 end
 
 function snafu_to_decimal(snafu)

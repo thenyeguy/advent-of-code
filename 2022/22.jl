@@ -23,7 +23,7 @@ function parse_directions(line)
 end
 
 function load_data()
-    map, directions = split(read(joinpath(@__DIR__, "22.txt"), String), "\n\n")
+    map, directions = split(read(joinpath(@__DIR__, "data", "22.txt"), String), "\n\n")
     return Board(to_matrix(map), parse_directions(directions))
 end
 

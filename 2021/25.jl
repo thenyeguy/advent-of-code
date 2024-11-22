@@ -3,7 +3,7 @@ module Day25
 #
 # Data loading:
 function load_data()
-    return split.(eachline(joinpath(@__DIR__, "25.txt")), "")
+    return split.(eachline(joinpath(@__DIR__, "data", "25.txt")), "")
 end
 
 #

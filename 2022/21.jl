@@ -33,7 +33,7 @@ function as_dict(monkeys)
 end
 
 function load_data()
-    monkeys = parse_monkey.(eachline(joinpath(@__DIR__, "21.txt")))
+    monkeys = parse_monkey.(eachline(joinpath(@__DIR__, "data", "21.txt")))
     return Dict(map(m -> (m.name, m), monkeys))
 end
 

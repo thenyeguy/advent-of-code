@@ -10,7 +10,7 @@ function load_data()
         eachmatch(r"(.+),(.+),(.+)", str) .|> parse_point |> collect
     end
 
-    file = read(joinpath(@__DIR__, "19.txt"), String)
+    file = read(joinpath(@__DIR__, "data", "19.txt"), String)
     split(file, "\n\n") .|> parse_points
 end
 

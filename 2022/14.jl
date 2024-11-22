@@ -9,7 +9,7 @@ function parse_line(line)
 end
 
 function load_data()
-    return parse_line.(eachline(joinpath(@__DIR__, "14.txt")))
+    return parse_line.(eachline(joinpath(@__DIR__, "data", "14.txt")))
 end
 
 function get_bounds(data)

@@ -5,7 +5,7 @@ module Day2
 # C = scissors = Z  ( = win )
 
 function load_data()
-    return split.(eachline(joinpath(@__DIR__, "02.txt")), " ")
+    return split.(eachline(joinpath(@__DIR__, "data", "02.txt")), " ")
 end
 
 function score(round)

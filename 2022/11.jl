@@ -30,7 +30,7 @@ function parse_monkey(lines)
 end
 
 function load_data()
-    return parse_monkey.(split(read(joinpath(@__DIR__, "11.txt"), String), "\n\n"))
+    return parse_monkey.(split(read(joinpath(@__DIR__, "data", "11.txt"), String), "\n\n"))
 end
 
 function throw_items!(monkies, relief, base)

@@ -9,7 +9,7 @@ function parse_pair(p)
 end
 
 function load_data()
-    return parse_pair.(eachline(joinpath(@__DIR__, "04.txt")))
+    return parse_pair.(eachline(joinpath(@__DIR__, "data", "04.txt")))
 end
 
 function pair_is_subset((a,b))

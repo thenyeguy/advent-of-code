@@ -3,7 +3,7 @@ module Day12
 #
 # Data loading:
 function load_data()
-    return collect(eachline(joinpath(@__DIR__, "12.txt")))
+    return collect(eachline(joinpath(@__DIR__, "data", "12.txt")))
 end
 
 #

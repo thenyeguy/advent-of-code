@@ -1,7 +1,7 @@
 module Day20
 
 function load_data()
-    return parse.(Int, eachline(joinpath(@__DIR__, "20.txt")))
+    return parse.(Int, eachline(joinpath(@__DIR__, "data", "20.txt")))
 end
 
 function mix(data, rounds=1)

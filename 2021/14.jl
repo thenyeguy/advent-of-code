@@ -5,7 +5,7 @@ using DataStructures
 #
 # Data loading:
 function load_data()
-    open(joinpath(@__DIR__, "14.txt"), "r") do io
+    open(joinpath(@__DIR__, "data", "14.txt"), "r") do io
         template = readline(io)
         readline(io)
         pairs = split.(eachline(io), " -> ") |> Dict

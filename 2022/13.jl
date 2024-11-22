@@ -5,7 +5,7 @@ function parse_line(line)
 end
 
 function load_data()
-    return filter(l -> !isnothing(l), parse_line.(eachline(joinpath(@__DIR__, "13.txt"))))
+    return filter(l -> !isnothing(l), parse_line.(eachline(joinpath(@__DIR__, "data", "13.txt"))))
 end
 
 @enum Comparison less equal greater

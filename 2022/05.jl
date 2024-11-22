@@ -26,7 +26,7 @@ function load_data()
         return reverse(stack)
     end
 
-    raw_stacks, raw_moves = split(read(joinpath(@__DIR__, "05.txt"), String), "\n\n")
+    raw_stacks, raw_moves = split(read(joinpath(@__DIR__, "data", "05.txt"), String), "\n\n")
     raw_stacks = split(raw_stacks, "\n")[1:end-1]
     stacks = map(i -> get_stack(raw_stacks, i), 1:9)
     moves = parse_move.(split(raw_moves, "\n"))

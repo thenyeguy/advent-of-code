@@ -14,7 +14,7 @@ function parse_line(s)
 end
 
 function load_data()
-    return parse_line.(eachline(joinpath(@__DIR__, "05.txt")))
+    return parse_line.(eachline(joinpath(@__DIR__, "data", "05.txt")))
 end
 
 function count_vents(data, include_diagonals)

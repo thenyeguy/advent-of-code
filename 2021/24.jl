@@ -5,7 +5,7 @@ using Combinatorics
 #
 # Data loading:
 function load_data()
-    return collect(eachline(joinpath(@__DIR__, "24.txt")))
+    return collect(eachline(joinpath(@__DIR__, "data", "24.txt")))
 end
 
 #
