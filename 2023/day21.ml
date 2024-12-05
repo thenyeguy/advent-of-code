@@ -80,7 +80,10 @@ let reachable_plots (steps : int) (garden : char Matrix.t) =
   in
   let even_corners = from_corners ||> evens (Fn.lt (rows / 2)) |> List.sum in
   let odd_corners = odds (Fn.gt (rows / 2)) all in
-  let n = (steps - (rows / 2)) / rows (* tiles traveled in one direction *) in
+  let n =
+    (steps - (rows / 2)) / rows
+    (* tiles traveled in one direction *)
+  in
   ((n + 1) * (n + 1) * all_odds)
   + (n * n * all_evens)
   - ((n + 1) * odd_corners)
