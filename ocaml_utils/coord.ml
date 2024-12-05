@@ -2,7 +2,10 @@
 type t = int * int
 
 (* A directional type. *)
-type dir = Up | Down | Left | Right
+type dir = Up | UpRight | Right | DownRight | Down | DownLeft | Left | UpLeft
+
+let cardinals = [ Up; Right; Down; Left ]
+let dirs = [ Up; UpRight; Right; DownRight; Down; DownLeft; Left; UpLeft ]
 
 (* Make the module orderable. *)
 let compare = compare
@@ -28,9 +31,13 @@ let manhattan_distance ((r1, c1) : t) ((r2, c2) : t) : int =
 let step ?(steps : int = 1) (dir : dir) ((row, col) : t) : t =
   match dir with
   | Up -> (row - steps, col)
-  | Down -> (row + steps, col)
-  | Left -> (row, col - steps)
+  | UpRight -> (row - steps, col + steps)
   | Right -> (row, col + steps)
+  | DownRight -> (row + steps, col + steps)
+  | Down -> (row + steps, col)
+  | DownLeft -> (row + steps, col - steps)
+  | Left -> (row, col - steps)
+  | UpLeft -> (row - steps, col - steps)
 
 (* Returns all coordinates adjacent to the given coordinate. *)
 let adjacencies ((row, col) : t) : t list =
@@ -47,4 +54,8 @@ let adjacencies ((row, col) : t) : t list =
 
 (* Returns the direction orthogonal to d. *)
 let orthogonals (d : dir) : dir list =
-  if d = Up || d = Down then [ Left; Right ] else [ Up; Down ]
+  match d with
+  | Up | Down -> [ Left; Right ]
+  | Left | Right -> [ Up; Down ]
+  | UpLeft | DownRight -> [ UpRight; DownLeft ]
+  | UpRight | DownLeft -> [ UpLeft; DownRight ]
