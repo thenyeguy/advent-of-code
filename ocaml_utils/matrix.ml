@@ -4,7 +4,7 @@ type 'a t = 'a array array
 
 let make = Array.make_matrix
 let init = Array.init_matrix
-let copy = Array.copy
+let copy m = Array.map Array.copy m
 
 (* Converts lines of strings into a matrix of characters. *)
 let of_strings (lines : string list) : char t =
