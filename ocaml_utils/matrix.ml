@@ -46,16 +46,15 @@ let iteri (f : int -> int -> 'a -> unit) (m : 'a t) : unit =
   let _ = mapi f m in
   ()
 
-let fold (f : 'acc -> 'a -> 'acc) (acc : 'acc) (m : 'a t) : 'acc =
-  let rows = Array.map (Array.fold_left f acc) m in
-  Array.fold_left f acc rows
+let fold (f : 'acc -> 'a -> 'acc) (init : 'acc) (m : 'a t) : 'acc =
+  Array.fold_left (Array.fold_left f) init m
 
 (* Folds each row/col, and collects the results into a new list *)
-let fold_rows (f : 'acc -> 'a -> 'acc) (acc : 'acc) (m : 'a t) : 'a list =
-  Array.map (Array.fold_left f acc) m |> Array.to_list
+let fold_rows (f : 'acc -> 'a -> 'acc) (init : 'acc) (m : 'a t) : 'a list =
+  Array.map (Array.fold_left f init) m |> Array.to_list
 
-let fold_cols (f : 'acc -> 'a -> 'acc) (acc : 'acc) (m : 'a t) : 'a list =
-  m |> transpose |> fold_rows f acc
+let fold_cols (f : 'acc -> 'a -> 'acc) (init : 'acc) (m : 'a t) : 'a list =
+  m |> transpose |> fold_rows f init
 
 (* Scanning *)
 let find (f : 'a -> bool) (m : 'a t) : (int * int) option =
