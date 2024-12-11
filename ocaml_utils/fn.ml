@@ -4,6 +4,9 @@ let id x = x
 (* Always returns a constant. *)
 let const c _ = c
 
+(* Reverse args (for currying) *)
+let swap f r l = f l r
+
 (* Reversed operators (for currying) *)
 let lt r l = l < r
 let gt r l = l > r

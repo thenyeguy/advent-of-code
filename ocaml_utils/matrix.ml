@@ -64,3 +64,12 @@ let find (f : 'a -> bool) (m : 'a t) : (int * int) option =
   match (row, col) with
   | Some r, Some c -> Option.some (r, c)
   | _ -> Option.none
+
+let find_all (f : 'a -> bool) (m : 'a t) : Coord.t list =
+  let matching_coords row col value =
+    if f value then Some (row, col) else None
+  in
+  let acc coords coord =
+    match coord with Some c -> c :: coords | None -> coords
+  in
+  mapi matching_coords m |> fold acc []
