@@ -56,6 +56,10 @@ let fold_rows (f : 'acc -> 'a -> 'acc) (init : 'acc) (m : 'a t) : 'a list =
 let fold_cols (f : 'acc -> 'a -> 'acc) (init : 'acc) (m : 'a t) : 'a list =
   m |> transpose |> fold_rows f init
 
+let coords (m : 'a t) : Coord.t list =
+  let coord row col _ = (row, col) in
+  mapi coord m |> Array.map Array.to_list |> Array.to_list |> List.flatten
+
 (* Scanning *)
 let find (f : 'a -> bool) (m : 'a t) : (int * int) option =
   let cols = Array.map (Array.find_index f) m in
