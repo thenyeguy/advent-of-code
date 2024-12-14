@@ -7,6 +7,10 @@ let const c _ = c
 (* Reverse args (for currying) *)
 let swap f r l = f l r
 
+(* Repeatedly apply a function to its own output. *)
+let rec repeat (f : 'a -> 'a) (n : int) (x : 'a) : 'a =
+  if n = 0 then x else (repeat [@tailcall]) f (n - 1) (f x)
+
 (* Reversed operators (for currying) *)
 let lt r l = l < r
 let gt r l = l > r

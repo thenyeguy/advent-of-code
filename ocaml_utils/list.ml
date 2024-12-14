@@ -13,6 +13,9 @@ let irange ?(from : int = 0) (to_ : int) : int list =
   if from < to_ then init (to_ - from + 1) (fun i -> from + i)
   else init (from - to_ + 1) (fun i -> from - i)
 
+(* Adds indices to a list *)
+let enumerate (l : 'a list) : (int * 'a) list = mapi Pair.pack l
+
 (* Getters: *)
 let rec last (l : 'a list) : 'a =
   match l with [] -> raise (Failure "last") | [ x ] -> x | _ :: xs -> last xs
@@ -23,7 +26,19 @@ let all (l : bool list) : bool = fold_left ( && ) true l
 let sum (l : int list) : int = fold_left ( + ) 0 l
 let product (l : int list) : int = fold_left ( * ) 1 l
 let max (l : int list) : int = fold_left max min_int l
+let min (l : int list) : int = fold_left min max_int l
 
+(* Returns the (index, value) of the minimum element. *)
+let mini (l : int list) : int * int =
+  let acc (mini, minx) (i, x) = if x < minx then (i, x) else (mini, minx) in
+  fold_left acc (-1, max_int) (enumerate l)
+
+(* Returns the (index, value) of the maximum element. *)
+let maxi (l : int list) : int * int =
+  let acc (maxi, maxx) (i, x) = if x > maxx then (i, x) else (maxi, maxx) in
+  fold_left acc (-1, min_int) (enumerate l)
+
+(* Counts all elements matching the predicate. *)
 let count (f : 'a -> bool) (l : 'a list) : int =
   fold_left (fun c v -> c + if f v then 1 else 0) 0 l
 

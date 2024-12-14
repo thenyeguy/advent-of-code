@@ -1,6 +1,9 @@
 (* A coordinate type of (row, col). *)
 type t = int * int
 
+(* A  *)
+type vec = int * int
+
 (* A directional type. *)
 type dir = Up | UpRight | Right | DownRight | Down | DownLeft | Left | UpLeft
 
@@ -26,6 +29,10 @@ end)
 (* Returns the L1 distance between two coords. *)
 let manhattan_distance ((r1, c1) : t) ((r2, c2) : t) : int =
   abs (r1 - r2) + abs (c1 - c2)
+
+(* Coordinate math: *)
+let add ((x, y) : t) ((dx, dy) : vec) : t = (x + dx, y + dy)
+let sub ((x, y) : t) ((dx, dy) : vec) : t = (x - dx, y - dy)
 
 (* Steps a coord in the given direction. *)
 let step ?(steps : int = 1) (dir : dir) ((row, col) : t) : t =
@@ -59,3 +66,9 @@ let orthogonals (d : dir) : dir list =
   | Left | Right -> [ Up; Down ]
   | UpLeft | DownRight -> [ UpRight; DownLeft ]
   | UpRight | DownLeft -> [ UpLeft; DownRight ]
+
+module Infix = struct
+  (* Coordinate math: *)
+  let ( ++ ) : t -> vec -> t = add
+  let ( -- ) : t -> vec -> t = sub
+end
