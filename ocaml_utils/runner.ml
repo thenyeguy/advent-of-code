@@ -1,20 +1,26 @@
-type 'a solution = 'a -> int
+open Fn.Infix
 
 exception Unimplemented
 
 (* Dummy function for unimplemented solutions. *)
-let unimplemented (_ : 'a) : int = raise Unimplemented
+let unimplemented _ = raise Unimplemented
 
 (* Util function for running AOC solutions. *)
-let main (input : 'a) (part_one : 'a solution) (part_two : 'a solution) =
+let runner (input : 'a) (part_one : 'a -> unit) (part_two : 'a -> unit) =
   if not !Sys.interactive then (
     let run label f =
       try
-        let solution = f input in
         print_string label;
-        print_int solution;
+        f input;
         print_newline ()
       with Unimplemented -> ()
     in
     run "Part one: " part_one;
     run "Part two: " part_two)
+
+let main (input : 'a) (part_one : 'a -> int) (part_two : 'a -> int) =
+  runner input (part_one >> print_int) (part_two >> print_int)
+
+let string_main (input : 'a) (part_one : 'a -> string) (part_two : 'a -> string)
+    =
+  runner input (part_one >> print_string) (part_two >> print_string)
