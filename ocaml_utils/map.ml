@@ -3,6 +3,9 @@ include Stdlib.Map
 module Make (Ord : OrderedType) = struct
   include Stdlib.Map.Make (Ord)
 
+  (* Returns whether the map contains the given key. *)
+  let contains (m : 'a t) (k : Ord.t) : bool = find_opt k m |> Option.is_some
+
   (* Increments the value of a given key in the map. *)
   let increment ?(count : int = 1) (map : int t) (x : Ord.t) =
     let increment' (v : int option) =

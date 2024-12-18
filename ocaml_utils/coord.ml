@@ -46,6 +46,30 @@ let step ?(steps : int = 1) (dir : dir) ((row, col) : t) : t =
   | Left -> (row, col - steps)
   | UpLeft -> (row - steps, col - steps)
 
+let flip (d : dir) : dir =
+  match d with
+  | Up -> Down
+  | Down -> Up
+  | Left -> Right
+  | Right -> Left
+  | _ -> raise (Failure "flip")
+
+let turn_left (d : dir) : dir =
+  match d with
+  | Up -> Left
+  | Left -> Down
+  | Down -> Right
+  | Right -> Up
+  | _ -> raise (Failure "turn_left")
+
+let turn_right (d : dir) : dir =
+  match d with
+  | Up -> Right
+  | Right -> Down
+  | Down -> Left
+  | Left -> Up
+  | _ -> raise (Failure "turn_right")
+
 (* Returns all coordinates adjacent to the given coordinate. *)
 let adjacencies ((row, col) : t) : t list =
   [

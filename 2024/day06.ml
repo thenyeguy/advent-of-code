@@ -17,15 +17,11 @@ let puzzle_input = Io.read_lines "2024/data/06.txt" |> Matrix.of_strings
 let starting_position (m : char Matrix.t) : Coord.t * Coord.dir =
   (Matrix.find (( = ) '^') m |> Option.get, Coord.Up)
 
-let turn_right (dir : Coord.dir) : Coord.dir =
-  Coord.(
-    match dir with Up -> Right | Right -> Down | Down -> Left | Left -> Up)
-
 let rec step (m : char Matrix.t) (pos : Coord.t) (dir : Coord.dir) :
     (Coord.t * Coord.dir) option =
   let pos' = Coord.step dir pos in
   match Matrix.get_opt m pos' with
-  | Some '#' -> step m pos (turn_right dir)
+  | Some '#' -> step m pos (Coord.turn_right dir)
   | Some _ -> Some (Coord.step dir pos, dir)
   | None -> None
 

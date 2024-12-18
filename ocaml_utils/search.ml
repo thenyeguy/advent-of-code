@@ -51,27 +51,23 @@ end
 module Make (Node : OrderedType) = struct
   type node = Node.t
 
-  module HistorySet = Set.Make (struct
-    type t = node
-
-    let compare = compare
-  end)
+  module HistorySet = Set.Make (Node)
+  module HistoryMap = Map.Make (Node)
 
   (* Finds the minimum cost path through a given graph, given:
    *  - neighbors: a function from a node to its adjacent nodes
    *  - cost src dest: a function that returns the cost of a given edge
    *  - is_done: a function indicating if the given node is an end state
    *  - starts: a list of nodes to start the search
-   * returns the cost of the shortest path.
    *)
   let find_shortest_path (neighbors : node -> node list)
       (cost : node -> node -> int) (is_done : node -> bool) (starts : node list)
       : int =
-    let rec dfs (q : 'a PQueue.t) (seen : HistorySet.t) : int =
+    let rec dfs (q : node PQueue.t) (seen : HistorySet.t) : int =
       match PQueue.pop q with
-      | None -> raise (Failure "find_minimal_path")
+      | None -> raise (Failure "find_shortest_path: no shortest path")
       | Some (q', node, priority) ->
-          if HistorySet.mem node seen then dfs q' seen
+          if HistorySet.mem node seen then (dfs [@tailcall]) q' seen
           else if is_done node then priority
           else
             let push q node' =
@@ -82,6 +78,30 @@ module Make (Node : OrderedType) = struct
             (dfs [@tailcall]) q'' seen'
     in
     dfs (PQueue.of_values starts) HistorySet.empty
+
+  (* Finds the distance from a given node to all other reachable nodes, given:
+   *  - neighbors: a function from a node to its adjacent nodes
+   *  - cost src dest: a function that returns the cost of a given edge
+   *  - starts: a list of nodes to start the search
+   *)
+  let find_distance_from (neighbors : node -> node list)
+      (cost : node -> node -> int) (starts : node list) : int HistoryMap.t =
+    let rec dfs (q : node PQueue.t) (seen : int HistoryMap.t) : int HistoryMap.t
+        =
+      match PQueue.pop q with
+      | None -> seen
+      | Some (q', node, priority) ->
+          if HistoryMap.contains seen node then (dfs [@tailcall]) q' seen
+          else
+            let seen' = HistoryMap.add node priority seen in
+            let push q node' =
+              let priority' = priority + cost node node' in
+              PQueue.push q node' priority'
+            in
+            let q'' = node |> neighbors |> List.fold_left push q' in
+            (dfs [@tailcall]) q'' seen'
+    in
+    dfs (PQueue.of_values starts) HistoryMap.empty
 
   (* Finds the maximum cost path through a given graph, given:
    *  - neighbors: a function from a node to its adjacent nodes
