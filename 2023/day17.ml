@@ -2,17 +2,6 @@ open Utils
 open Utils.List.Infix
 
 (*
- * Types
- *)
-type map = int Matrix.t
-
-module Search = Search.Make (struct
-  type t = Coord.t * Coord.dir
-
-  let compare = compare
-end)
-
-(*
  * Parse input
  *)
 let int_of_digit (c : char) : int =
@@ -27,43 +16,49 @@ let puzzle_input =
 (*
  * Part 1
  *)
-let neighbors ~(min_steps : int) ~(max_steps : int) (map : map)
-    ((coord, dir) : Search.node) : Search.node list =
-  let steps dir =
-    let step n = (Coord.step ~steps:n dir coord, dir) in
-    List.range ~from:min_steps (max_steps + 1) ||> step
-  in
-  dir |> Coord.orthogonals |> List.concat_map steps
-  |> List.filter (fun (c, _) -> Matrix.in_bounds map c)
+module Graph = struct
+  type t = int * int * int Matrix.t
+  type node = Coord.t * Coord.dir
 
-let get_cost (map : map) ((src, _) : Search.node) ((dest, dir) : Search.node) :
-    int =
-  let (rs, cs), (rd, cd) = (src, dest) in
-  let steps =
-    match dir with
-    | Up -> List.irange ~from:(rs - 1) rd ||> fun r -> (r, cd)
-    | Down -> List.irange ~from:(rs + 1) rd ||> fun r -> (r, cd)
-    | Left -> List.irange ~from:(cs - 1) cd ||> fun c -> (rd, c)
-    | Right -> List.irange ~from:(cs + 1) cd ||> fun c -> (rd, c)
-  in
-  steps ||> Matrix.get map |> List.sum
+  let neighbors ((min_steps, max_steps, map) : t) ((coord, dir) : node) :
+      node list =
+    let steps dir =
+      let step n = (Coord.step ~steps:n dir coord, dir) in
+      List.range ~from:min_steps (max_steps + 1) ||> step
+    in
+    dir |> Coord.orthogonals |> List.concat_map steps
+    |> List.filter (fun (c, _) -> Matrix.in_bounds map c)
 
-let is_done (map : map) ((coord, _) : Search.node) : bool =
-  let dest = (Matrix.rows map - 1, Matrix.cols map - 1) in
-  coord = dest
+  let cost ((_, _, map) : t) ((src, _) : node) ((dest, dir) : node) : int =
+    let (rs, cs), (rd, cd) = (src, dest) in
+    let steps =
+      match dir with
+      | Up -> List.irange ~from:(rs - 1) rd ||> fun r -> (r, cd)
+      | Down -> List.irange ~from:(rs + 1) rd ||> fun r -> (r, cd)
+      | Left -> List.irange ~from:(cs - 1) cd ||> fun c -> (rd, c)
+      | Right -> List.irange ~from:(cs + 1) cd ||> fun c -> (rd, c)
+    in
+    steps ||> Matrix.get map |> List.sum
 
-let find_shortest_path ?(min_steps : int = 1) ~(max_steps : int) (map : map) =
+  let is_done ((_, _, map) : t) ((coord, _) : node) : bool =
+    let dest = (Matrix.rows map - 1, Matrix.cols map - 1) in
+    coord = dest
+end
+
+module Search = Search.Make (Graph)
+
+let find_shortest_path ?(min_steps : int = 1) ~(max_steps : int)
+    (map : int Matrix.t) =
   Search.find_shortest_path
-    (neighbors ~min_steps ~max_steps map)
-    (get_cost map) (is_done map)
+    (min_steps, max_steps, map)
     [ ((0, 0), Right); ((0, 0), Down) ]
 
-let part_one (map : map) : int = find_shortest_path ~max_steps:3 map
+let part_one (map : int Matrix.t) : int = find_shortest_path ~max_steps:3 map
 
 (*
  * Part 2
  *)
-let part_two (map : map) : int =
+let part_two (map : int Matrix.t) : int =
   find_shortest_path ~min_steps:4 ~max_steps:10 map
 
 (*

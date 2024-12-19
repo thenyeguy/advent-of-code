@@ -7,10 +7,6 @@ open Utils.List.Infix
 type map = char Matrix.t
 type edge_map = (Coord.t * int) list Coord.Map.t
 
-module Search = Search.Make (Coord)
-
-let print_coord (r, c) = Printf.printf "(%d,%d)" r c
-
 (*
  * Parse input
  *)
@@ -41,13 +37,21 @@ let neighbors ?(climb : bool = false) (map : map) (c : Coord.t) : Coord.t list =
   |> List.filter is_valid_dir
   ||> fun d -> Coord.step d c
 
-let get_longest_path (map : map) : int =
-  let start, goal = ((0, 1), (Matrix.rows map - 1, Matrix.cols map - 2)) in
-  let cost _ _ = 1 in
-  let is_done c = c = goal in
-  Search.find_longest_path (neighbors map) cost is_done start
+module CharGraph = struct
+  type t = map
+  type node = Coord.t
 
-let part_one = get_longest_path
+  let neighbors (g : t) (c : Coord.t) : node list = neighbors g c
+  let cost _ _ _ : int = 1
+
+  let is_done (g : t) (c : node) : bool =
+    let goal = (Matrix.rows g - 1, Matrix.cols g - 2) in
+    c = goal
+end
+
+module CharSearch = Search.Make (CharGraph)
+
+let part_one (map : map) : int = CharSearch.find_longest_path map (0, 1)
 
 (*
  * Part 2
@@ -89,15 +93,25 @@ let make_edge_map (edges : (Coord.t * Coord.t * int) list) : edge_map =
   in
   List.fold_left add_edge Coord.Map.empty edges
 
+module EdgeGraph = struct
+  type t = edge_map * Coord.t
+  type node = Coord.t
+
+  let neighbors ((edges, _) : t) (node : node) : node list =
+    Coord.Map.find node edges ||> Pair.left
+
+  let cost ((edges, _) : t) (src : node) (dest : node) : int =
+    edges |> Coord.Map.find src |> List.assoc dest
+
+  let is_done ((_, goal) : t) (c : node) : bool = c = goal
+end
+
+module EdgeSearch = Search.Make (EdgeGraph)
+
 let get_longest_path2 (map : map) : int =
   let edges = map |> get_edges |> make_edge_map in
   let start, goal = ((0, 1), (Matrix.rows map - 1, Matrix.cols map - 2)) in
-  let neighbors (node : Coord.t) = Coord.Map.find node edges ||> Pair.left in
-  let cost (src : Coord.t) (dest : Coord.t) : int =
-    edges |> Coord.Map.find src |> List.assoc dest
-  in
-  let is_done c = c = goal in
-  Search.find_longest_path neighbors cost is_done start
+  EdgeSearch.find_longest_path (edges, goal) start
 
 let part_two = get_longest_path2
 

@@ -1,8 +1,19 @@
-(* Input signature for the Search functor. *)
-module type OrderedType = sig
+(* A generic graph type. *)
+module type Graph = sig
+  (* The type of a single node in the graph. *)
+  type node
+
+  (* Abstract representation of the graph. *)
   type t
 
-  val compare : t -> t -> int
+  (* Returns all neighbors of the given node. *)
+  val neighbors : t -> node -> node list
+
+  (* Returns the cost of the (directed) edge between two nodes. *)
+  val cost : t -> node -> node -> int
+
+  (* Indicates if a given node is an end state. *)
+  val is_done : t -> node -> bool
 end
 
 (* A lightweight priority queue with integer weights. *)
@@ -48,11 +59,15 @@ module PQueue = struct
 end
 
 (* Initialize a search module for the provided node type. *)
-module Make (Node : OrderedType) = struct
-  type node = Node.t
+module Make (G : Graph) = struct
+  module NodeOrd = struct
+    type t = G.node
 
-  module HistorySet = Set.Make (Node)
-  module HistoryMap = Map.Make (Node)
+    let compare = compare
+  end
+
+  module HistorySet = Set.Make (NodeOrd)
+  module HistoryMap = Map.Make (NodeOrd)
 
   (* Finds the minimum cost path through a given graph, given:
    *  - neighbors: a function from a node to its adjacent nodes
@@ -60,20 +75,18 @@ module Make (Node : OrderedType) = struct
    *  - is_done: a function indicating if the given node is an end state
    *  - starts: a list of nodes to start the search
    *)
-  let find_shortest_path (neighbors : node -> node list)
-      (cost : node -> node -> int) (is_done : node -> bool) (starts : node list)
-      : int =
-    let rec dfs (q : node PQueue.t) (seen : HistorySet.t) : int =
+  let find_shortest_path (g : G.t) (starts : G.node list) : int =
+    let rec dfs (q : G.node PQueue.t) (seen : HistorySet.t) : int =
       match PQueue.pop q with
       | None -> raise (Failure "find_shortest_path: no shortest path")
       | Some (q', node, priority) ->
           if HistorySet.mem node seen then (dfs [@tailcall]) q' seen
-          else if is_done node then priority
+          else if G.is_done g node then priority
           else
             let push q node' =
-              PQueue.push q node' (priority + cost node node')
+              PQueue.push q node' (priority + G.cost g node node')
             in
-            let q'' = node |> neighbors |> List.fold_left push q' in
+            let q'' = node |> G.neighbors g |> List.fold_left push q' in
             let seen' = HistorySet.add node seen in
             (dfs [@tailcall]) q'' seen'
     in
@@ -84,10 +97,9 @@ module Make (Node : OrderedType) = struct
    *  - cost src dest: a function that returns the cost of a given edge
    *  - starts: a list of nodes to start the search
    *)
-  let find_distance_from (neighbors : node -> node list)
-      (cost : node -> node -> int) (starts : node list) : int HistoryMap.t =
-    let rec dfs (q : node PQueue.t) (seen : int HistoryMap.t) : int HistoryMap.t
-        =
+  let find_distance_from (g : G.t) (starts : G.node list) : int HistoryMap.t =
+    let rec dfs (q : G.node PQueue.t) (seen : int HistoryMap.t) :
+        int HistoryMap.t =
       match PQueue.pop q with
       | None -> seen
       | Some (q', node, priority) ->
@@ -95,10 +107,10 @@ module Make (Node : OrderedType) = struct
           else
             let seen' = HistoryMap.add node priority seen in
             let push q node' =
-              let priority' = priority + cost node node' in
+              let priority' = priority + G.cost g node node' in
               PQueue.push q node' priority'
             in
-            let q'' = node |> neighbors |> List.fold_left push q' in
+            let q'' = node |> G.neighbors g |> List.fold_left push q' in
             (dfs [@tailcall]) q'' seen'
     in
     dfs (PQueue.of_values starts) HistoryMap.empty
@@ -109,19 +121,17 @@ module Make (Node : OrderedType) = struct
    *  - is_done: a function indicating if the given node is an end state
    *  - starts: a list of nodes to start the search
    *)
-  let find_longest_path (neighbors : node -> node list)
-      (get_cost : node -> node -> int) (is_done : node -> bool) (start : node) :
-      int =
+  let find_longest_path (g : G.t) (start : G.node) : int =
     let open List.Infix in
-    let rec get_path' (seen : HistorySet.t) (cost : int) (node : node) : int =
-      if is_done node then cost
+    let rec get_path' (seen : HistorySet.t) (cost : int) (node : G.node) : int =
+      if G.is_done g node then cost
       else
         let seen' = HistorySet.add node seen in
         let is_unseen n = HistorySet.mem n seen |> not in
         let get_path'' node' =
-          get_path' seen' (cost + get_cost node node') node'
+          get_path' seen' (cost + G.cost g node node') node'
         in
-        neighbors node |> List.filter is_unseen ||> get_path'' |> List.max
+        G.neighbors g node |> List.filter is_unseen ||> get_path'' |> List.max
     in
     get_path' HistorySet.empty 0 start
 end
