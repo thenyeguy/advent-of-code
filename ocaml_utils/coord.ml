@@ -34,6 +34,13 @@ let manhattan_distance ((r1, c1) : t) ((r2, c2) : t) : int =
 let add ((x, y) : t) ((dx, dy) : vec) : t = (x + dx, y + dy)
 let sub ((x, y) : t) ((dx, dy) : vec) : t = (x - dx, y - dy)
 
+(* Bounds checking *)
+let in_bounds ?(lower : t = (0, 0)) ~(upper : t) (c : t) =
+  let lx, ly = lower in
+  let ux, uy = upper in
+  let x, y = c in
+  lx <= x && x <= ux && ly <= y && y <= uy
+
 (* Steps a coord in the given direction. *)
 let step ?(steps : int = 1) (dir : dir) ((row, col) : t) : t =
   match dir with
@@ -90,6 +97,9 @@ let orthogonals (d : dir) : dir list =
   | Left | Right -> [ Up; Down ]
   | UpLeft | DownRight -> [ UpRight; DownLeft ]
   | UpRight | DownLeft -> [ UpLeft; DownRight ]
+
+(* String parsing *)
+let coord_of_string (s : string) : t = Scanf.sscanf s "%d,%d" Pair.pack
 
 module Infix = struct
   (* Coordinate math: *)
