@@ -34,16 +34,6 @@ let key_coord (key : char) : Coord.t =
   | 'v' -> (-1, 1)
   | '>' -> (-1, 0)
 
-let rec paths (h : char) (h_count : int) (v : char) (v_count : int) :
-    char list list =
-  match (h_count, v_count) with
-  | 0, 0 -> [ [ 'A' ] ]
-  | n, 0 -> [ List.repeated h n @ [ 'A' ] ]
-  | 0, n -> [ List.repeated v n @ [ 'A' ] ]
-  | _ ->
-      List.map (List.cons h) (paths h (h_count - 1) v v_count)
-      @ List.map (List.cons v) (paths h h_count v (v_count - 1))
-
 let valid_path (src : char) (path : char list) =
   match (src, path) with
   | 'A', '<' :: '<' :: _ -> false
@@ -58,9 +48,12 @@ let valid_path (src : char) (path : char list) =
 let button_presses self ((robot, keys) : int * char list) : int =
   let press (dst : char) (src : char) : int =
     let rows, cols = key_coord dst -- key_coord src in
-    let h, h_count = if cols < 0 then ('>', -cols) else ('<', cols) in
-    let v, v_count = if rows < 0 then ('v', -rows) else ('^', rows) in
-    paths h h_count v v_count
+    let r, rs = if cols < 0 then ('>', -cols) else ('<', cols) in
+    let c, cs = if rows < 0 then ('v', -rows) else ('^', rows) in
+    [
+      List.repeated r rs @ List.repeated c cs @ [ 'A' ];
+      List.repeated c cs @ List.repeated r rs @ [ 'A' ];
+    ]
     |> List.filter (valid_path src)
     ||> (if robot = 1 then List.length else fun p -> self (robot - 1, p))
     |> List.min
