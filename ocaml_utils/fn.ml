@@ -16,6 +16,8 @@ let lt r l = l < r
 let gt r l = l > r
 let lte r l = l <= r
 let gte r l = l >= r
+let sub r l = l - r
+let div r l = l / r
 
 module Infix = struct
   (* Functional composition: *)
