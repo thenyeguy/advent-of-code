@@ -1,0 +1,10 @@
+(executables
+ (names day00 day01)
+ (libraries utils))
+
+(env
+ (dev
+  ; Disable annoying warnings:
+  ;  8: Partial_match
+  ;  32: unused-value-declaration
+  (flags :standard -w -8-32)))
