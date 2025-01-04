@@ -1,6 +1,6 @@
 (executables
- (names day00 day01)
- (libraries utils))
+ (names day00 day01 day02)
+ (libraries intcode utils))
 
 (env
  (dev

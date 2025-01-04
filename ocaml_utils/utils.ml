@@ -16,6 +16,7 @@ module Option = Option
 module Pair = Pair
 module Runner = Runner
 module Search = Search
+module Seq = Seq
 module Set = Set
 module String = String
 
