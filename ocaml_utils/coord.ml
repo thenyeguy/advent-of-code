@@ -74,6 +74,14 @@ let orthogonal_dirs (d : dir) : dir list =
 (* String parsing *)
 let coord_of_string (s : string) : t = Scanf.sscanf s "%d,%d" Pair.pack
 
+let dir_of_char (c : char) : dir =
+  match c with
+  | 'U' -> Up
+  | 'L' -> Left
+  | 'R' -> Right
+  | 'D' -> Down
+  | _ -> raise (Failure "coord_of_string")
+
 module Infix = struct
   (* Coordinate math: *)
   let ( ++ ) : t -> vec -> t = add
