@@ -3,8 +3,9 @@ type state_t = Idle | WaitingForInput | Done
 
 (* A mutable IntCode computer *)
 type t = {
-  mem : int array;
+  mutable mem : int array;
   mutable pc : int;
+  mutable relative_base : int;
   mutable state : state_t;
   mutable inputs : int list;
   mutable outputs : int list;
@@ -14,14 +15,21 @@ type t = {
 type program_t = int list
 
 (* An IntCode parameter type. *)
-type param_t = Position of int | Immediate of int
+type param_t = Position of int | Immediate of int | Relative of int
 
 (* Raised to stop execution. *)
 exception Interrupt
 
 (* Initializes an IntCode computer. *)
 let init (program : program_t) (inputs : int list) : t =
-  { mem = Array.of_list program; pc = 0; state = Idle; inputs; outputs = [] }
+  {
+    mem = Array.of_list program;
+    pc = 0;
+    relative_base = 0;
+    state = Idle;
+    inputs;
+    outputs = [];
+  }
 
 (* Steps the IntCode computer, mutating the memory. *)
 let step (c : t) =
@@ -39,14 +47,31 @@ let step (c : t) =
         match mode with
         | 0 -> Position arg :: read_inner modes (n - 1)
         | 1 -> Immediate arg :: read_inner modes (n - 1)
+        | 2 -> Relative arg :: read_inner modes (n - 1)
     in
     read_inner (instruction / 100) n
   in
   let read (p : param_t) : int =
-    match p with Position addr -> c.mem.(addr) | Immediate n -> n
+    let read_mem (addr : int) : int =
+      if addr >= Array.length c.mem then 0 else c.mem.(addr)
+    in
+    match p with
+    | Position addr -> read_mem addr
+    | Relative addr -> read_mem (addr + c.relative_base)
+    | Immediate n -> n
   in
   let write (p : param_t) (n : int) =
-    let (Position addr) = p in
+    let expand_mem (addr : int) =
+      if addr >= Array.length c.mem then
+        let new_mem = addr + 1 - Array.length c.mem in
+        c.mem <- Array.append c.mem (Array.make new_mem 0)
+    in
+    let addr =
+      match p with
+      | Position addr -> addr
+      | Relative addr -> addr + c.relative_base
+    in
+    expand_mem addr;
     c.mem.(addr) <- n
   in
   (* Opcode implementation: *)
@@ -69,7 +94,7 @@ let step (c : t) =
           raise Interrupt)
   | 4 (* output *) ->
       let [ addr ] = params 1 in
-      c.outputs <- read addr :: c.outputs
+      c.outputs <- c.outputs @ [ read addr ]
   | 5 (* jump-if-true *) ->
       let [ arg; pc ] = params 2 in
       if read arg != 0 then c.pc <- read pc
@@ -82,6 +107,9 @@ let step (c : t) =
   | 8 (* equals *) ->
       let [ a; b; addr ] = params 3 in
       write addr (if read a = read b then 1 else 0)
+  | 9 (* relative-base *) ->
+      let [ arg ] = params 1 in
+      c.relative_base <- c.relative_base + read arg
   | 99 (* halt *) ->
       c.state <- Done;
       raise Interrupt
