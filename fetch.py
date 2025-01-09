@@ -13,27 +13,7 @@ def get_cookie():
         return f.read().strip()
 
 
-def is_valid_date(year, day):
-    if year < 2015:
-        return False
-    if day < 1 or day > 25:
-        return False
-    if date(year, 12, day) > date.today():
-        return False
-    return True
-
-
-def main(argv):
-    parser = argparse.ArgumentParser(description="Fetch AOC problem inputs.")
-    parser.add_argument("--year", type=int)
-    parser.add_argument("--day", type=int)
-    parser.add_argument("--redownload", action="store_true")
-    args = parser.parse_args(argv[1:])
-
-    # Default to today, then validate.
-    year = args.year or date.today().year
-    day = args.day or date.today().day
-
+def fetch_day(args, year, day):
     # Only download if the data doesn't already exist.
     filename = f"{year}/data/{day:02}.txt"
     if os.path.exists(filename) and not args.redownload:
@@ -48,8 +28,28 @@ def main(argv):
     if not response.ok:
         print(f"Download failed (ERROR {response.status_code}):\n  {response.content}")
         return 1
+    os.makedirs(f"{year}/data", exist_ok=True)
     with open(filename, "w") as f:
         f.write(response.text[:-1])
+
+
+def main(argv):
+    parser = argparse.ArgumentParser(description="Fetch AOC problem inputs.")
+    parser.add_argument("--year", type=int)
+    parser.add_argument("--day", type=int)
+    parser.add_argument("--all", action="store_true")
+    parser.add_argument("--redownload", action="store_true")
+    args = parser.parse_args(argv[1:])
+
+    # Default to today, then validate.
+    year = args.year or date.today().year
+
+    if args.all:
+        for day in range(1, 26):
+            fetch_day(args, year, day)
+    else:
+        day = args.day or date.today().day
+        fetch_day(args, year, day)
 
     return 0
 
