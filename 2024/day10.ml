@@ -18,7 +18,7 @@ let find_trailheads (m : int Matrix.t) : Coord.t list =
 let neighbors (m : int Matrix.t) (c : Coord.t) =
   let h = Matrix.get m c in
   let is_valid c' = Matrix.get_opt m c' = Some (h + 1) in
-  Coord.cardinals ||> Fn.swap Coord.step c |> List.filter is_valid
+  List.filter is_valid (Coord.adjacencies c)
 
 let trail_score (m : int Matrix.t) (trailhead : Coord.t) : int =
   let rec dfs (seen : Coord.Set.t) (frontier : Coord.t list) : Coord.Set.t =

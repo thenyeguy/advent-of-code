@@ -19,7 +19,7 @@ let in_bounds (tiles : char Matrix.t) (b : beam) : bool =
 
 let step (tiles : char Matrix.t) (b : beam) : beam list =
   let open Coord in
-  let move dir = { coord = step dir b.coord; dir } in
+  let move dir = { coord = step b.coord dir; dir } in
   let bounce c dir =
     match (c, dir) with
     | '/', Up -> move Right

@@ -11,7 +11,7 @@ let puzzle_input = Io.read_lines "2023/data/21.txt" |> Matrix.of_strings
  *)
 let get_adjacencies (garden : char Matrix.t) (c : Coord.t) : Coord.t list =
   let is_open c' = Matrix.get garden c' <> '#' in
-  Coord.[ step Up c; step Left c; step Right c; step Down c ]
+  Coord.adjacencies c
   |> List.filter (Matrix.in_bounds garden)
   |> List.filter is_open
 

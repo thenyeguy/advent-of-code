@@ -20,7 +20,7 @@ module Graph = struct
     match Matrix.get_opt g p with Some '.' | Some 'E' -> true | _ -> false
 
   let neighbors (g : t) (pos : node) : node list =
-    Coord.cardinals ||> Fn.swap Coord.step pos |> List.filter (is_open_space g)
+    List.filter (is_open_space g) (Coord.adjacencies pos)
 
   let cost _ _ _ : int = 1
   let is_done _ _ : bool = false (* not needed fo find all costs *)

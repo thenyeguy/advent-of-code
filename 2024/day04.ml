@@ -9,24 +9,23 @@ let puzzle_input = Io.read_file "2024/data/04.txt" |> Matrix.of_string
 (*
  * Part 1
  *)
-let rec get_slice ~(l : int) (m : char Matrix.t) (c : Coord.t) (d : Coord.dir) :
+let rec get_slice ~(l : int) (m : char Matrix.t) (c : Coord.t) (v : Coord.vec) :
     char list option =
   if l = 0 then Some []
   else
     match Matrix.get_opt m c with
     | Some ch -> (
-        match get_slice ~l:(l - 1) m (Coord.step d c) d with
+        match get_slice ~l:(l - 1) m (Coord.add c v) v with
         | Some chs -> Some (ch :: chs)
         | _ -> None)
     | None -> None
 
-let get_slices ~(l : int) (m : char Matrix.t) (c : Coord.t) : char list list =
-  Coord.dirs ||> get_slice ~l m c |> List.filter_none
+let get_slices ~(l : int) (m : char Matrix.t) (c : Coord.t) : string list =
+  List.filter_map (get_slice ~l m c) Coord.all_direction_vecs ||> String.implode
 
 let count_xmas (m : char Matrix.t) : int =
   let count_slices row col c =
-    if c = 'X' then
-      get_slices ~l:4 m (row, col) |> List.count (( = ) [ 'X'; 'M'; 'A'; 'S' ])
+    if c = 'X' then get_slices ~l:4 m (row, col) |> List.count (( = ) "XMAS")
     else 0
   in
   Matrix.mapi count_slices m |> Matrix.fold ( + ) 0

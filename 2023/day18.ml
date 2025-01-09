@@ -24,7 +24,7 @@ let puzzle_input = Io.read_lines "2023/data/18.txt" ||> parse_trench
 (* Get a list of vertices for the trenches. *)
 let dig_trenches (dig_plan : trench list) : Coord.t list =
   let next_vertex acc trench =
-    (Coord.step ~steps:trench.length trench.dir acc, acc)
+    (Coord.step ~steps:trench.length acc trench.dir, acc)
   in
   List.fold_left_map next_vertex (0, 0) dig_plan |> Pair.right
 

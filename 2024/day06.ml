@@ -19,10 +19,10 @@ let starting_position (m : char Matrix.t) : Coord.t * Coord.dir =
 
 let rec step (m : char Matrix.t) (pos : Coord.t) (dir : Coord.dir) :
     (Coord.t * Coord.dir) option =
-  let pos' = Coord.step dir pos in
+  let pos' = Coord.step pos dir in
   match Matrix.get_opt m pos' with
   | Some '#' -> step m pos (Coord.turn_right dir)
-  | Some _ -> Some (Coord.step dir pos, dir)
+  | Some _ -> Some (Coord.step pos dir, dir)
   | None -> None
 
 let trace_path (m : char Matrix.t) : Coord.Set.t =

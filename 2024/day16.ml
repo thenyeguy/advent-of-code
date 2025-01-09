@@ -15,7 +15,7 @@ module Graph = struct
 
   let neighbors (g : t) ((pos, dir) : node) : node list =
     let turns = [ (pos, Coord.turn_left dir); (pos, Coord.turn_right dir) ] in
-    let step = Coord.step dir pos in
+    let step = Coord.step pos dir in
     match Matrix.get_opt g step with
     | Some '.' | Some 'S' | Some 'E' -> (step, dir) :: turns
     | _ -> turns

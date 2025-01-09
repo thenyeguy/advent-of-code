@@ -43,7 +43,7 @@ let push_box (state : warehouse_state) (pos : Coord.t) (dir : Coord.dir) :
   let rec find_open_space (pos : Coord.t) : Coord.t option =
     if Coord.Set.contains state.walls pos then None
     else if Coord.Set.contains state.boxes pos then
-      find_open_space (Coord.step dir pos)
+      find_open_space (Coord.step pos dir)
     else Some pos
   in
   let move_box pos' =
@@ -57,7 +57,7 @@ let push_box (state : warehouse_state) (pos : Coord.t) (dir : Coord.dir) :
 
 (* Returns the updated state after applying a single move. *)
 let apply_move (state : warehouse_state) (dir : Coord.dir) : warehouse_state =
-  let p = Coord.step dir state.robot in
+  let p = Coord.step state.robot dir in
   if Coord.Set.contains state.walls p then state
   else if Coord.Set.contains state.boxes p then
     match push_box state p dir with Some state' -> state' | None -> state
@@ -109,7 +109,7 @@ let rec push_wide_box (state : warehouse_state) (pos : Coord.t)
       | Some pos' -> push_wide_box state pos' dir
       | None -> Some state
   in
-  let pos' = Coord.step dir pos in
+  let pos' = Coord.step pos dir in
   let move_box state =
     Some
       {
@@ -129,7 +129,7 @@ let rec push_wide_box (state : warehouse_state) (pos : Coord.t)
 
 let apply_wide_move (state : warehouse_state) (dir : Coord.dir) :
     warehouse_state =
-  let p = Coord.step dir state.robot in
+  let p = Coord.step state.robot dir in
   if Coord.Set.contains state.walls p then state
   else
     match get_box state p with

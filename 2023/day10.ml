@@ -83,9 +83,8 @@ let flood_fill (map : map) : map =
   let flood c =
     try
       if Matrix.get map c = '.' then (
-        Coord.(
-          Matrix.set map c 'x';
-          [ step Up c; step Down c; step Left c; step Right c ]))
+        Matrix.set map c 'x';
+        Coord.adjacencies c)
       else []
     with Invalid_argument _ -> []
   in

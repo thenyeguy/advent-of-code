@@ -18,7 +18,7 @@ module Graph = struct
     let is_open c =
       Coord.in_bounds ~upper:goal c && not (Coord.Set.contains bytes c)
     in
-    Coord.cardinals ||> Fn.swap Coord.step pos |> List.filter is_open
+    Coord.adjacencies pos |> List.filter is_open
 
   let cost _ _ _ : int = 1
   let is_done ((_, goal) : t) (pos : node) : bool = pos = goal

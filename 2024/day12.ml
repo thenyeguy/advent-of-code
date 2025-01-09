@@ -18,8 +18,7 @@ let puzzle_input = Io.read_lines "2024/data/12.txt" |> Matrix.of_strings
  *)
 let neighbors (m : char Matrix.t) (c : Coord.t) : Coord.t list =
   let is_connected c' = Matrix.get_opt m c = Matrix.get_opt m c' in
-  let step dir = Coord.step dir c in
-  Coord.cardinals ||> step |> List.filter is_connected
+  List.filter is_connected (Coord.adjacencies c)
 
 let components (m : char Matrix.t) : CoordSet.t list =
   let rec dfs (seen : CoordSet.t) (frontier : Coord.t list) : CoordSet.t =
@@ -58,9 +57,9 @@ let component_sides (component : CoordSet.t) : int =
   let get_edges (cs : CoordSet.t) : Coord.t list DirMap.t =
     let edges' (cs : CoordSet.t) (c : Coord.t) : (Coord.dir * Coord.t) list =
       let is_open dir =
-        if Coord.step dir c |> CoordSet.contains cs then None else Some (dir, c)
+        if Coord.step c dir |> CoordSet.contains cs then None else Some (dir, c)
       in
-      List.filter_map is_open Coord.cardinals
+      List.filter_map is_open Coord.dirs
     in
     let acc m (d, c) = DirMap.add_to_list d c m in
     CoordSet.to_list cs ||> edges' cs |> List.flatten

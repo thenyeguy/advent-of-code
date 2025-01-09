@@ -17,7 +17,7 @@ let puzzle_input = Io.read_lines "2023/data/23.txt" |> Matrix.of_strings
  *)
 let neighbors ?(climb : bool = false) (map : map) (c : Coord.t) : Coord.t list =
   let is_valid_target d =
-    match Matrix.get_opt map (Coord.step d c) with
+    match Matrix.get_opt map (Coord.step c d) with
     | Some '#' -> false
     | None -> false
     | _ -> true
@@ -34,8 +34,7 @@ let neighbors ?(climb : bool = false) (map : map) (c : Coord.t) : Coord.t list =
   in
   Coord.[ Up; Left; Down; Right ]
   |> List.filter is_valid_target
-  |> List.filter is_valid_dir
-  ||> fun d -> Coord.step d c
+  |> List.filter is_valid_dir ||> Coord.step c
 
 module CharGraph = struct
   type t = map

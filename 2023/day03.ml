@@ -43,7 +43,7 @@ let parts_in_schematic (schematic : string list) : part list =
 let has_adjacent_symbol (symbols : symbol list) (part : part) : bool =
   let symbol_coords = List.map (fun s -> s.sym_pos) symbols in
   let is_symbol c = List.mem c symbol_coords in
-  List.map Coord.adjacencies part.part_pos
+  List.map Coord.surrounding part.part_pos
   |> List.flatten |> List.exists is_symbol
 
 let adjacent_parts (parts : part list) (symbol : symbol) : part list =

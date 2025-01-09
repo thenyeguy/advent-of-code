@@ -1,14 +1,17 @@
 (* A coordinate type of (row, col). *)
 type t = int * int
 
-(* A  *)
+(* A directional type. *)
+type dir = Up | Right | Down | Left
+
+let dirs = [ Up; Right; Down; Left ]
+
+(* A coordinate difference. *)
 type vec = int * int
 
-(* A directional type. *)
-type dir = Up | UpRight | Right | DownRight | Down | DownLeft | Left | UpLeft
-
-let cardinals = [ Up; Right; Down; Left ]
-let dirs = [ Up; UpRight; Right; DownRight; Down; DownLeft; Left; UpLeft ]
+(* All directions to surrounding coords. *)
+let all_direction_vecs =
+  [ (1, 0); (1, 1); (0, 1); (-1, 1); (-1, 0); (-1, -1); (0, -1); (1, -1) ]
 
 (* Make the module orderable. *)
 let compare = compare
@@ -42,61 +45,31 @@ let in_bounds ?(lower : t = (0, 0)) ~(upper : t) (c : t) =
   lx <= x && x <= ux && ly <= y && y <= uy
 
 (* Steps a coord in the given direction. *)
-let step ?(steps : int = 1) (dir : dir) ((row, col) : t) : t =
+let step ?(steps : int = 1) ((row, col) : t) (dir : dir) : t =
   match dir with
   | Up -> (row - steps, col)
-  | UpRight -> (row - steps, col + steps)
   | Right -> (row, col + steps)
-  | DownRight -> (row + steps, col + steps)
   | Down -> (row + steps, col)
-  | DownLeft -> (row + steps, col - steps)
   | Left -> (row, col - steps)
-  | UpLeft -> (row - steps, col - steps)
 
 let flip (d : dir) : dir =
-  match d with
-  | Up -> Down
-  | Down -> Up
-  | Left -> Right
-  | Right -> Left
-  | _ -> raise (Failure "flip")
+  match d with Up -> Down | Down -> Up | Left -> Right | Right -> Left
 
 let turn_left (d : dir) : dir =
-  match d with
-  | Up -> Left
-  | Left -> Down
-  | Down -> Right
-  | Right -> Up
-  | _ -> raise (Failure "turn_left")
+  match d with Up -> Left | Left -> Down | Down -> Right | Right -> Up
 
 let turn_right (d : dir) : dir =
-  match d with
-  | Up -> Right
-  | Right -> Down
-  | Down -> Left
-  | Left -> Up
-  | _ -> raise (Failure "turn_right")
+  match d with Up -> Right | Right -> Down | Down -> Left | Left -> Up
 
-(* Returns all coordinates adjacent to the given coordinate. *)
-let adjacencies ((row, col) : t) : t list =
-  [
-    (row - 1, col - 1);
-    (row - 1, col);
-    (row - 1, col + 1);
-    (row, col - 1);
-    (row, col + 1);
-    (row + 1, col - 1);
-    (row + 1, col);
-    (row + 1, col + 1);
-  ]
+(* Returns all coordinates orthogonally adjacent to the coordinate. *)
+let adjacencies (c : t) : t list = List.map (step c) [ Up; Right; Down; Left ]
+
+(* Returns all coordinates surrounding the coordinate. *)
+let surrounding (c : t) : t list = List.map (add c) all_direction_vecs
 
 (* Returns the direction orthogonal to d. *)
-let orthogonals (d : dir) : dir list =
-  match d with
-  | Up | Down -> [ Left; Right ]
-  | Left | Right -> [ Up; Down ]
-  | UpLeft | DownRight -> [ UpRight; DownLeft ]
-  | UpRight | DownLeft -> [ UpLeft; DownRight ]
+let orthogonal_dirs (d : dir) : dir list =
+  match d with Up | Down -> [ Left; Right ] | Left | Right -> [ Up; Down ]
 
 (* String parsing *)
 let coord_of_string (s : string) : t = Scanf.sscanf s "%d,%d" Pair.pack

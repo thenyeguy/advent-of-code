@@ -23,10 +23,10 @@ module Graph = struct
   let neighbors ((min_steps, max_steps, map) : t) ((coord, dir) : node) :
       node list =
     let steps dir =
-      let step n = (Coord.step ~steps:n dir coord, dir) in
+      let step n = (Coord.step ~steps:n coord dir, dir) in
       List.range ~from:min_steps (max_steps + 1) ||> step
     in
-    dir |> Coord.orthogonals |> List.concat_map steps
+    Coord.orthogonal_dirs dir |> List.concat_map steps
     |> List.filter (fun (c, _) -> Matrix.in_bounds map c)
 
   let cost ((_, _, map) : t) ((src, _) : node) ((dest, dir) : node) : int =
