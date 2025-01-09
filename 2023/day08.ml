@@ -58,18 +58,12 @@ let get_starting_nodes (m : map) : string list =
 let reached_ending_nodes (nodes : string list) : bool =
   nodes ||> String.ends_with ~suffix:"Z" |> List.all
 
-let lcm a b =
-  let rec gcd n =
-    match (a mod n, b mod n) with 0, 0 -> n | _ -> gcd (n - 1)
-  in
-  a * b / gcd (min a b)
-
 let count_ghost_steps (m : map) =
   (* We assume there are unique cycles for each path; then check for the
      combined periodicity of all the cycles *)
   let starting_nodes = get_starting_nodes m in
   let steps = starting_nodes ||> count_steps m (String.ends_with ~suffix:"Z") in
-  List.fold_left lcm 1 steps
+  List.fold_left Math.lcm 1 steps
 
 let part_two = count_ghost_steps
 

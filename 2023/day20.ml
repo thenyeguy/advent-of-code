@@ -145,17 +145,8 @@ let get_cycle_length (chain : (string * bool) list) : int =
   let read_binary acc (_, bit) = (2 * acc) + if bit then 1 else 0 in
   chain |> List.rev |> List.fold_left read_binary 0
 
-let lcm (l : int list) : int =
-  let lcm' a b =
-    let rec gcd n =
-      match (a mod n, b mod n) with 0, 0 -> n | _ -> gcd (n - 1)
-    in
-    a * b / gcd (min a b)
-  in
-  List.fold_left lcm' 1 l
-
 let part_two (input : comm_module list) : int =
-  input |> get_chains ||> get_cycle_length |> lcm
+  input |> get_chains ||> get_cycle_length |> List.fold_left Math.lcm 1
 
 (*
  * Main

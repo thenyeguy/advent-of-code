@@ -10,6 +10,7 @@ module Io = Io
 module Lin_alg = Lin_alg
 module List = List
 module Map = Map
+module Math = Math
 module Matrix = Matrix
 module Memo = Memo
 module Option = Option
