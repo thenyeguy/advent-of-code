@@ -15,4 +15,8 @@ module Make (Ord : OrderedType) = struct
 
   (* Returns a map of how many times each element occurs in the given list. *)
   let counts (xs : Ord.t list) : int t = List.fold_left increment empty xs
+
+  (* Returns the value of [k] in the map, or [default] if [k] is not set. *)
+  let find_or (k : key) (default : 'a) (m : 'a t) : 'a =
+    match find_opt k m with Some v -> v | None -> default
 end

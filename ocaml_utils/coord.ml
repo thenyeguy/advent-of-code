@@ -73,6 +73,7 @@ let orthogonal_dirs (d : dir) : dir list =
 
 (* String parsing *)
 let coord_of_string (s : string) : t = Scanf.sscanf s "%d,%d" Pair.pack
+let string_of_coord ((r, c) : t) : string = Format.sprintf "(%d,%d)" r c
 
 let dir_of_char (c : char) : dir =
   match c with

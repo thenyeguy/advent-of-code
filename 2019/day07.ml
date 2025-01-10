@@ -10,7 +10,7 @@ let puzzle_input = Intcode.Io.read_program "2019/data/07.txt"
  *)
 let run_network (prog : Intcode.Computer.program_t) (phases : int list) : int =
   let run_amp input phase =
-    Intcode.Computer.(init prog [ phase; input ] |> run |> pop |> Option.get)
+    Intcode.Computer.(init prog ~inputs:[ phase; input ] |> run |> pop)
   in
   List.fold_left run_amp 0 phases
 
@@ -33,11 +33,11 @@ let part_one program =
 let run_recurrent_network (prog : Intcode.Computer.program_t)
     (phases : int list) : int =
   let open Intcode.Computer in
-  let cs = phases ||> fun phase -> init prog [ phase ] in
+  let cs = List.map (fun phase -> init prog ~inputs:[ phase ]) phases in
   let run_amp (input : int) (c : t) =
     push c input;
     ignore (run c);
-    pop c |> Option.get
+    pop c
   in
   let rec tick (input : int) : int =
     let output = List.fold_left run_amp input cs in

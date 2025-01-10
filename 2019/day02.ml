@@ -13,7 +13,7 @@ let set_input (noun : int) (verb : int) (p : int list) : int list =
   hd :: noun :: verb :: tl
 
 let run (program : Intcode.Computer.program_t) : int =
-  Intcode.Computer.(init program [] |> run |> read_memory 0)
+  Intcode.Computer.(init program |> run |> read_memory 0)
 
 let part_one = set_input 12 2 >> run
 
