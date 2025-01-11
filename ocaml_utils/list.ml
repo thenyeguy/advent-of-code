@@ -62,6 +62,18 @@ let pair_map (f : 'a -> 'a -> 'b) (l : 'a list) =
 let group (g : 'a -> 'a -> bool) (l : 'a list) : 'a list list =
   l |> to_seq |> Seq.group g |> of_seq |> map of_seq
 
+(* Triple equivalents to pair operations: *)
+let split3 (l : ('a * 'b * 'c) list) : 'a list * 'b list * 'c list =
+  let xs (x, _, _) = x in
+  let ys (_, y, _) = y in
+  let zs (_, _, z) = z in
+  (map xs l, map ys l, map zs l)
+
+let combine3 (xs : 'a list) (ys : 'b list) (zs : 'c list) : ('a * 'b * 'c) list
+    =
+  let flatten (a, (b, c)) = (a, b, c) in
+  combine ys zs |> combine xs |> map flatten
+
 (* Returns a list of all combinations of the elements in `list` *)
 let rec combinations (list : 'a list) : ('a * 'a) list =
   match list with
