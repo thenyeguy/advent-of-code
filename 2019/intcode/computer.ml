@@ -125,8 +125,14 @@ let read_memory (addr : int) (c : t) : int = c.mem.(addr)
 (** Adds an input to the computer. *)
 let push (c : t) (i : int) = Queue.push i c.inputs
 
+(** Checks if output is available. *)
+let has_output (c : t) : bool = not (Queue.is_empty c.outputs)
+
 (** Pops an output from the computer, if available. *)
 let pop (c : t) : int = Queue.pop c.outputs
+
+(* Indicates the computer is running. *)
+let is_running (c : t) : bool = c.state <> Done
 
 (* Indicates the computer has halted. *)
 let is_done (c : t) : bool = c.state = Done
