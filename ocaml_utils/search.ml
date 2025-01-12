@@ -132,3 +132,16 @@ module Make (G : Graph) = struct
     in
     get_path' NodeSet.empty 0 start
 end
+
+(** Find the maximum value of [n] such that [predicate n] is true. *)
+let binary_search ?(lower : int = 0) ~(upper : int) (predicate : int -> bool) :
+    int =
+  assert (predicate lower);
+  assert (not (predicate upper));
+  let rec search lower upper =
+    if lower + 1 = upper then lower
+    else
+      let n = (upper + lower) / 2 in
+      if predicate n then search n upper else search lower n
+  in
+  search lower upper
