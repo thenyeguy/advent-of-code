@@ -1,6 +1,4 @@
 open Utils
-open Utils.List.Infix
-open Utils.Fn.Infix
 module IntSet = Set.Make (Int)
 module IntMap = Map.Make (Int)
 

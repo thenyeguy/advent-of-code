@@ -1,5 +1,4 @@
 open Utils
-open Utils.List.Infix
 module CoordSet = Set.Make (Coord)
 
 module DirMap = Map.Make (struct

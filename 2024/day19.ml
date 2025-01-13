@@ -1,6 +1,4 @@
 open Utils
-open Utils.Fn.Infix
-open Utils.List.Infix
 
 (*
  * Parse input

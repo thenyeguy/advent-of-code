@@ -1,6 +1,5 @@
 open Utils
 open Utils.Coord.Infix
-open Utils.List.Infix
 
 (*
  * Parse input

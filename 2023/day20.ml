@@ -1,6 +1,4 @@
 open Utils
-open Utils.List.Infix
-open Utils.Fn.Infix
 
 (*
  * Types

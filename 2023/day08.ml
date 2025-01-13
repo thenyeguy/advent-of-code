@@ -1,5 +1,4 @@
 open Utils
-open Utils.List.Infix
 module StringMap = Map.Make (String)
 
 (*

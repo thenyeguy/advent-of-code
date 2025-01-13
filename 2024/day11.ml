@@ -1,5 +1,4 @@
 open Utils
-open Utils.Fn.Infix
 module IntMap = Map.Make (Int)
 
 (*
