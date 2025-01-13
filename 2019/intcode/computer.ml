@@ -31,6 +31,15 @@ let init ?(inputs : int list = []) (program : program_t) : t =
     outputs = Queue.create ();
   }
 
+(** Spawns a new copy of the IntCode computer's state. *)
+let copy (c : t) : t =
+  {
+    c with
+    mem = Array.copy c.mem;
+    inputs = Queue.copy c.inputs;
+    outputs = Queue.copy c.outputs;
+  }
+
 (** Steps the IntCode computer, mutating the memory. *)
 let step (c : t) =
   (* Parse instrcution: *)

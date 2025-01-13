@@ -55,14 +55,10 @@ let visualize (m : int Coord.Map.t) : string =
     let row, col = Coord.Infix.(c -- min) in
     m.(row).(col) <- '#'
   in
-  let to_string =
-    Array.map (Array.to_list >> String.implode)
-    >> Array.to_list >> String.concat "\n"
-  in
   List.iter paint_black cs;
-  "\n" ^ to_string m
+  Matrix.to_string m
 
-let part_two = paint_hull ~initial:1 >> visualize
+let part_two = paint_hull ~initial:1 >> visualize >> String.cat "\n"
 
 (*
  * Main

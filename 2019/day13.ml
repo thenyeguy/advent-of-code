@@ -1,5 +1,4 @@
 open Utils
-open Utils.Fn.Infix
 
 (*
  * Parse input
@@ -50,11 +49,7 @@ let draw_screen (state : state_t) : string =
     | Paddle -> '-'
     | Ball -> 'o'
   in
-  let to_string =
-    Array.map (Array.to_list >> String.implode)
-    >> Array.to_list >> String.concat "\n"
-  in
-  Matrix.map draw state.screen |> to_string
+  Matrix.map draw state.screen |> Matrix.to_string
 
 let paddle_dir (state : state_t) : int =
   let (Some (_, paddle_x)) = Matrix.find (( = ) Paddle) state.screen in

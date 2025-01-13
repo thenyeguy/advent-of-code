@@ -119,8 +119,7 @@ let rec push_wide_box (state : warehouse_state) (pos : coord) (dir : dir) :
   in
   (match dir with
   | Coord.Up | Coord.Down ->
-      push_half pos' state
-      |> Option.rbind (push_half (pos' ++ (0, 1)))
+      push_half pos' state |> Option.rbind (push_half (pos' ++ (0, 1)))
   | Coord.Left -> push_half pos' state
   | Coord.Right -> push_half (pos' ++ (0, 1)) state)
   |> Option.rbind move_box

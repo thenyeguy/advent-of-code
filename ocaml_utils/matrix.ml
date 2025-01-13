@@ -17,6 +17,12 @@ let of_string (s : string) : char t =
 let to_seq (m : 'a t) : 'a Seq.t Seq.t = Array.to_seq m |> Seq.map Array.to_seq
 let of_seq (s : 'a Seq.t Seq.t) : 'a t = Seq.map Array.of_seq s |> Array.of_seq
 
+(* Converts a matrix of characters into a string *)
+let to_string (m : char t) : string =
+  let open Fn.Infix in
+  Array.map (Array.to_list >> String.implode) m
+  |> Array.to_list |> String.concat "\n"
+
 (* Basic accessors: *)
 let rows (m : 'a t) : int = Array.length m
 let cols (m : 'a t) : int = Array.length m.(0)

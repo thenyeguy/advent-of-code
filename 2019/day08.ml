@@ -50,11 +50,9 @@ let flatten_image (tensor : char tensor) : char matrix =
 
 let to_string (m : char matrix) : string =
   let to_block c = if c = '1' then '#' else ' ' in
-  Matrix.map to_block m
-  |> Array.map (Array.to_list >> String.implode)
-  |> Array.to_list |> String.concat "\n"
+  m |> Matrix.map to_block |> Matrix.to_string
 
-let part_two = to_tensor >> flatten_image >> to_string >> ( ^ ) "\n"
+let part_two = to_tensor >> flatten_image >> to_string >> String.cat "\n"
 
 (*
  * Main
