@@ -1,7 +1,7 @@
 open Utils
 
-type symbol = { sym_pos : Coord.t; sym : char }
-type part = { part_pos : Coord.t list; num : int }
+type symbol = { sym_pos : coord; sym : char }
+type part = { part_pos : coord list; num : int }
 
 let symbols_in_row (rowi : int) (row : string) : symbol list =
   let symbol_idx i c =

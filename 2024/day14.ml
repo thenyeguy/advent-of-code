@@ -4,7 +4,7 @@ open Utils.Coord.Infix
 (*
  * Parse input
  *)
-type robot = { p : Coord.t; v : Coord.vec }
+type robot = { p : coord; v : Coord.vec }
 
 let parse_robot (line : string) : robot =
   Scanf.sscanf line "p=%d,%d v=%d,%d" (fun x y dx dy ->

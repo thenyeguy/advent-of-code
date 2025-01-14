@@ -3,7 +3,7 @@ open Utils
 (*
  * Types
  *)
-type beam = { coord : Coord.t; dir : Coord.dir }
+type beam = { coord : coord; dir : dir }
 
 (*
  * Parse input
@@ -13,10 +13,10 @@ let puzzle_input = Io.read_lines "2023/data/16.txt" |> Matrix.of_strings
 (*
  * Part 1
  *)
-let in_bounds (tiles : char Matrix.t) (b : beam) : bool =
+let in_bounds (tiles : char matrix) (b : beam) : bool =
   Matrix.in_bounds tiles b.coord
 
-let step (tiles : char Matrix.t) (b : beam) : beam list =
+let step (tiles : char matrix) (b : beam) : beam list =
   let open Coord in
   let move dir = { coord = step b.coord dir; dir } in
   let bounce c dir =
@@ -46,7 +46,7 @@ let step (tiles : char Matrix.t) (b : beam) : beam list =
   | '-' -> split '-' b.dir
   | '|' -> split '|' b.dir
 
-let travel (tiles : char Matrix.t) (start : beam) : Coord.Set.t =
+let travel (tiles : char matrix) (start : beam) : Coord.Set.t =
   let seen = Hashtbl.create 100 in
   let rec travel' coords b =
     let coords' = Coord.Set.add b.coord coords in
@@ -58,13 +58,13 @@ let travel (tiles : char Matrix.t) (start : beam) : Coord.Set.t =
   in
   travel' Coord.Set.empty start
 
-let part_one (tiles : char Matrix.t) : int =
+let part_one (tiles : char matrix) : int =
   travel tiles { coord = (0, 0); dir = Right } |> Coord.Set.cardinal
 
 (*
  * Part 2
  *)
-let starting_beams (tiles : char Matrix.t) : beam list =
+let starting_beams (tiles : char matrix) : beam list =
   let rows, cols = Matrix.size tiles in
   let row_is, col_is = (List.range rows, List.range cols) in
   let make_row r cs dir = cs ||> fun c -> { coord = (r, c); dir } in
@@ -74,7 +74,7 @@ let starting_beams (tiles : char Matrix.t) : beam list =
   @ make_col 0 row_is Right
   @ make_col (cols - 1) row_is Left
 
-let part_two (tiles : char Matrix.t) : int =
+let part_two (tiles : char matrix) : int =
   starting_beams tiles ||> travel tiles ||> Coord.Set.cardinal |> List.max
 
 (*

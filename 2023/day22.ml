@@ -40,11 +40,11 @@ let puzzle_input = Io.read_lines "2023/data/22.txt" ||> parse_brick
  * Part 1
  *)
 
-let shadow (((x1, y1, _), (x2, y2, _)) : brick) : Coord.t list =
+let shadow (((x1, y1, _), (x2, y2, _)) : brick) : coord list =
   if x1 = x2 then List.irange ~from:y1 y2 ||> Pair.pack x1
   else List.irange ~from:x1 x2 ||> Pair.rpack y1
 
-let shadow_heights (b : brick) : (Coord.t * int) Seq.t =
+let shadow_heights (b : brick) : (coord * int) Seq.t =
   shadow b ||> Pair.rpack (maxz b) |> List.to_seq
 
 let drop_bricks (bricks : brick list) : brick list =

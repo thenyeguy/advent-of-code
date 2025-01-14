@@ -14,6 +14,10 @@ let of_strings (lines : string list) : char t =
 let of_string (s : string) : char t =
   s |> String.split_on_char '\n' |> of_strings
 
+let to_seq (m : 'a t) : 'a Seq.t Seq.t = Array.to_seq m |> Seq.map Array.to_seq
+let of_seq (s : 'a Seq.t Seq.t) : 'a t = Seq.map Array.of_seq s |> Array.of_seq
+
+(* Basic accessors: *)
 let rows (m : 'a t) : int = Array.length m
 let cols (m : 'a t) : int = Array.length m.(0)
 let size (m : 'a t) : Coord.t = (rows m, cols m)
@@ -26,9 +30,7 @@ let in_bounds (m : 'a t) ((row, col) : Coord.t) =
 let get_opt (m : 'a t) (c : Coord.t) : 'a option =
   if in_bounds m c then Option.some (get m c) else Option.none
 
-let transpose (m : 'a t) : 'a t =
-  m |> Array.to_seq |> Seq.map Array.to_seq |> Seq.transpose
-  |> Seq.map Array.of_seq |> Array.of_seq
+let transpose (m : 'a t) : 'a t = to_seq m |> Seq.transpose |> of_seq
 
 (* Rotates the matrix clockwise. *)
 let rotate (m : 'a t) : 'a t =

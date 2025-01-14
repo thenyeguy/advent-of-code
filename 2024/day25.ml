@@ -3,7 +3,7 @@ open Utils
 (*
  * Parse input
  *)
-type input_t = char Matrix.t list
+type input_t = char matrix list
 
 let puzzle_input : input_t =
   Io.read_lines "2024/data/25.txt" |> Io.split_blocks ||> Matrix.of_strings
@@ -13,7 +13,7 @@ let puzzle_input : input_t =
  *)
 type schematics_t = { locks : int list list; keys : int list list }
 
-let count_pins (m : char Matrix.t) : int list =
+let count_pins (m : char matrix) : int list =
   let count (a : char array) : int =
     Array.to_list a |> List.count (( = ) '#') |> Fn.sub 1
   in

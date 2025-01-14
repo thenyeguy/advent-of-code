@@ -2,7 +2,7 @@ open Utils
 module CoordSet = Set.Make (Coord)
 
 module DirMap = Map.Make (struct
-  type t = Coord.dir
+  type t = dir
 
   let compare = compare
 end)
@@ -15,12 +15,12 @@ let puzzle_input = Io.read_lines "2024/data/12.txt" |> Matrix.of_strings
 (*
  * Part 1
  *)
-let neighbors (m : char Matrix.t) (c : Coord.t) : Coord.t list =
+let neighbors (m : char matrix) (c : coord) : Coord.t list =
   let is_connected c' = Matrix.get_opt m c = Matrix.get_opt m c' in
   List.filter is_connected (Coord.adjacencies c)
 
-let components (m : char Matrix.t) : CoordSet.t list =
-  let rec dfs (seen : CoordSet.t) (frontier : Coord.t list) : CoordSet.t =
+let components (m : char matrix) : CoordSet.t list =
+  let rec dfs (seen : CoordSet.t) (frontier : coord list) : CoordSet.t =
     match frontier with
     | [] -> seen
     | c :: cs ->
@@ -40,7 +40,7 @@ let components (m : char Matrix.t) : CoordSet.t list =
   in
   Matrix.coords m |> CoordSet.of_list |> components_inner
 
-let component_cost (m : char Matrix.t) (component : CoordSet.t) : int =
+let component_cost (m : char matrix) (component : CoordSet.t) : int =
   let acc c p = p + 4 - (neighbors m c |> List.length) in
   let perimeter = CoordSet.fold acc component 0 in
   let area = CoordSet.cardinal component in
@@ -53,8 +53,8 @@ let part_one input = components input ||> component_cost input |> List.sum
  *)
 let component_sides (component : CoordSet.t) : int =
   (* Gets all edge normals around the component. *)
-  let get_edges (cs : CoordSet.t) : Coord.t list DirMap.t =
-    let edges' (cs : CoordSet.t) (c : Coord.t) : (Coord.dir * Coord.t) list =
+  let get_edges (cs : CoordSet.t) : coord list DirMap.t =
+    let edges' (cs : CoordSet.t) (c : coord) : (dir * Coord.t) list =
       let is_open dir =
         if Coord.step c dir |> CoordSet.contains cs then None else Some (dir, c)
       in
@@ -75,7 +75,7 @@ let component_sides (component : CoordSet.t) : int =
     List.sort compare ls |> segments_inner
   in
   (* Counts all sides facing a specific direction. *)
-  let count_sides (dir : Coord.dir) (cs : Coord.t list) : int =
+  let count_sides (dir : dir) (cs : coord list) : int =
     (* Flip the major axis so that it is always normal to the edge *)
     let cs =
       Coord.(

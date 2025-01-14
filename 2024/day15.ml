@@ -4,9 +4,9 @@ open Utils.Coord.Infix
 (*
  * Parse input
  *)
-type input_t = { map : char Matrix.t; moves : Coord.dir list }
+type input_t = { map : char matrix; moves : dir list }
 
-let dir_of_char (c : char) : Coord.dir =
+let dir_of_char (c : char) : dir =
   Coord.(match c with '^' -> Up | '>' -> Right | 'v' -> Down | '<' -> Left)
 
 let parse_input (lines : string list) : input_t =
@@ -23,11 +23,11 @@ let puzzle_input = Io.read_lines "2024/data/15.txt" |> parse_input
 type warehouse_state = {
   walls : Coord.Set.t;
   boxes : Coord.Set.t;
-  robot : Coord.t;
+  robot : coord;
 }
 
 type init_fn = input_t -> warehouse_state
-type move_fn = warehouse_state -> Coord.dir -> warehouse_state
+type move_fn = warehouse_state -> dir -> warehouse_state
 
 let init_warehouse (input : input_t) : warehouse_state =
   let walls = Matrix.find_all (( = ) '#') input.map |> Coord.Set.of_list in
@@ -35,11 +35,11 @@ let init_warehouse (input : input_t) : warehouse_state =
   let robot = Matrix.find (( = ) '@') input.map |> Option.get in
   { walls; boxes; robot }
 
-let push_box (state : warehouse_state) (pos : Coord.t) (dir : Coord.dir) :
+let push_box (state : warehouse_state) (pos : coord) (dir : dir) :
     warehouse_state option =
   (* Find the first free space after a line of boxes; move the closest box to
    * the open space. This is equivalent to pushing every box one space. *)
-  let rec find_open_space (pos : Coord.t) : Coord.t option =
+  let rec find_open_space (pos : coord) : Coord.t option =
     if Coord.Set.contains state.walls pos then None
     else if Coord.Set.contains state.boxes pos then
       find_open_space (Coord.step pos dir)
@@ -55,7 +55,7 @@ let push_box (state : warehouse_state) (pos : Coord.t) (dir : Coord.dir) :
   find_open_space pos |> Option.map move_box
 
 (* Returns the updated state after applying a single move. *)
-let apply_move (state : warehouse_state) (dir : Coord.dir) : warehouse_state =
+let apply_move (state : warehouse_state) (dir : dir) : warehouse_state =
   let p = Coord.step state.robot dir in
   if Coord.Set.contains state.walls p then state
   else if Coord.Set.contains state.boxes p then
@@ -69,7 +69,7 @@ let simulate (init : init_fn) (move : move_fn) (input : input_t) :
   List.fold_left simulate_inner (init input) input.moves
 
 (* Converts a coord to GPS *)
-let gps_of_coord ((r, c) : Coord.t) : int = (100 * r) + c
+let gps_of_coord ((r, c) : coord) : int = (100 * r) + c
 
 (* Shared glue between both parts. *)
 let compute_answer (init : init_fn) (move : move_fn) (input : input_t) : int =
@@ -94,13 +94,13 @@ let init_wide_warehouse (input : input_t) : warehouse_state =
   let boxes = Coord.Set.map new_coord boxes in
   { walls; boxes; robot = new_coord robot }
 
-let get_box (state : warehouse_state) (pos : Coord.t) : Coord.t option =
+let get_box (state : warehouse_state) (pos : coord) : Coord.t option =
   let find p = Coord.Set.find_opt p state.boxes in
   Option.or_ (find pos) (find (pos -- (0, 1)))
 
 (* Tries to push a wide box, returning the new state after pushing. *)
-let rec push_wide_box (state : warehouse_state) (pos : Coord.t)
-    (dir : Coord.dir) : warehouse_state option =
+let rec push_wide_box (state : warehouse_state) (pos : coord) (dir : dir) :
+    warehouse_state option =
   let push_half pos state =
     if Coord.Set.contains state.walls pos then None
     else
@@ -126,8 +126,7 @@ let rec push_wide_box (state : warehouse_state) (pos : Coord.t)
   | Coord.Right -> push_half (pos' ++ (0, 1)) state)
   |> Option.then_ move_box
 
-let apply_wide_move (state : warehouse_state) (dir : Coord.dir) :
-    warehouse_state =
+let apply_wide_move (state : warehouse_state) (dir : dir) : warehouse_state =
   let p = Coord.step state.robot dir in
   if Coord.Set.contains state.walls p then state
   else

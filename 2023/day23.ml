@@ -3,8 +3,8 @@ open Utils
 (*
  * Types
  *)
-type map = char Matrix.t
-type edge_map = (Coord.t * int) list Coord.Map.t
+type map = char matrix
+type edge_map = (coord * int) list Coord.Map.t
 
 (*
  * Parse input
@@ -14,7 +14,7 @@ let puzzle_input = Io.read_lines "2023/data/23.txt" |> Matrix.of_strings
 (*
  * Part 1
  *)
-let neighbors ?(climb : bool = false) (map : map) (c : Coord.t) : Coord.t list =
+let neighbors ?(climb : bool = false) (map : map) (c : coord) : Coord.t list =
   let is_valid_target d =
     match Matrix.get_opt map (Coord.step c d) with
     | Some '#' -> false
@@ -37,9 +37,9 @@ let neighbors ?(climb : bool = false) (map : map) (c : Coord.t) : Coord.t list =
 
 module CharGraph = struct
   type t = map
-  type node = Coord.t
+  type node = coord
 
-  let neighbors (g : t) (c : Coord.t) : node list = neighbors g c
+  let neighbors (g : t) (c : coord) : node list = neighbors g c
   let cost _ _ _ : int = 1
 
   let is_done (g : t) (c : node) : bool =
@@ -54,8 +54,8 @@ let part_one (map : map) : int = CharSearch.find_longest_path map (0, 1)
 (*
  * Part 2
  *)
-let find_intersection (map : map) (src : Coord.t) (start : Coord.t) :
-    Coord.t * int =
+let find_intersection (map : map) (src : coord) (start : Coord.t) : coord * int
+    =
   let rec find_intersection' from c steps =
     match neighbors ~climb:true map c |> List.filter (( <> ) from) with
     | [ next ] -> find_intersection' c next (steps + 1)
@@ -63,7 +63,7 @@ let find_intersection (map : map) (src : Coord.t) (start : Coord.t) :
   in
   find_intersection' src start 1
 
-let get_edges (map : map) : (Coord.t * Coord.t * int) list =
+let get_edges (map : map) : (coord * Coord.t * int) list =
   let rec bfs seen edges frontier =
     match frontier with
     | [] -> edges
@@ -80,7 +80,7 @@ let get_edges (map : map) : (Coord.t * Coord.t * int) list =
   in
   bfs Coord.Set.empty [] [ (0, 1) ]
 
-let make_edge_map (edges : (Coord.t * Coord.t * int) list) : edge_map =
+let make_edge_map (edges : (coord * Coord.t * int) list) : edge_map =
   let add_edge edges (src, dest, cost) =
     let append e existing =
       match existing with
@@ -92,8 +92,8 @@ let make_edge_map (edges : (Coord.t * Coord.t * int) list) : edge_map =
   List.fold_left add_edge Coord.Map.empty edges
 
 module EdgeGraph = struct
-  type t = edge_map * Coord.t
-  type node = Coord.t
+  type t = edge_map * coord
+  type node = coord
 
   let neighbors ((edges, _) : t) (node : node) : node list =
     Coord.Map.find node edges ||> Pair.left

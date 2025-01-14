@@ -10,8 +10,8 @@ let puzzle_input = Io.read_lines "2024/data/16.txt" |> Matrix.of_strings
  * Part 1
  *)
 module Graph = struct
-  type t = char Matrix.t
-  type node = Coord.t * Coord.dir
+  type t = char matrix
+  type node = coord * dir
 
   let neighbors (g : t) ((pos, dir) : node) : node list =
     let turns = [ (pos, Coord.turn_left dir); (pos, Coord.turn_right dir) ] in

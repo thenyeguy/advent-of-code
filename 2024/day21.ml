@@ -9,7 +9,7 @@ let puzzle_input = Io.read_lines "2024/data/21.txt"
 (*
  * Part 1
  *)
-let key_coord (key : char) : Coord.t =
+let key_coord (key : char) : coord =
   match key with
   (* 7 8 9
    * 4 5 6

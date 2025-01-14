@@ -75,7 +75,7 @@ let f (h1 : hailstone) (h2 : hailstone) (h3 : hailstone)
   Array.concat [ f' h1 t1; f' h2 t2; f' h3 t3 ]
 
 let jacobian (h1 : hailstone) (h2 : hailstone) (h3 : hailstone)
-    (x : float array) : float Matrix.t =
+    (x : float array) : float matrix =
   let dx1, dy1, dz1 = h1.velocity in
   let dx2, dy2, dz2 = h2.velocity in
   let dx3, dy3, dz3 = h3.velocity in

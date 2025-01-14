@@ -19,6 +19,11 @@ module Search = Search
 module Set = Set
 module String = String
 
+(* Helpful type aliases. *)
+type coord = Coord.t
+type dir = Coord.dir
+type 'a matrix = 'a Matrix.t
+
 (* Automatically export a few common operators when opening. *)
 let ( << ) = Fn.Infix.( << )
 let ( >> ) = Fn.Infix.( >> )

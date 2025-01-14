@@ -8,14 +8,14 @@ let puzzle_input = Io.read_lines "2023/data/21.txt" |> Matrix.of_strings
 (*
  * Part 1
  *)
-let get_adjacencies (garden : char Matrix.t) (c : Coord.t) : Coord.t list =
+let get_adjacencies (garden : char matrix) (c : coord) : Coord.t list =
   let is_open c' = Matrix.get garden c' <> '#' in
   Coord.adjacencies c
   |> List.filter (Matrix.in_bounds garden)
   |> List.filter is_open
 
-let steps_from (garden : char Matrix.t) (c : Coord.t) : (Coord.t * int) list =
-  let rec steps_from' (counts : int Coord.Map.t) (frontier : Coord.t list)
+let steps_from (garden : char matrix) (c : coord) : (Coord.t * int) list =
+  let rec steps_from' (counts : int Coord.Map.t) (frontier : coord list)
       (steps : int) =
     if List.is_empty frontier then counts
     else
@@ -32,11 +32,11 @@ let steps_from (garden : char Matrix.t) (c : Coord.t) : (Coord.t * int) list =
   in
   steps_from' Coord.Map.empty [ c ] 0 |> Coord.Map.to_list
 
-let reachable_from (garden : char Matrix.t) (c : Coord.t) (steps : int) : int =
+let reachable_from (garden : char matrix) (c : coord) (steps : int) : int =
   steps_from garden c
   |> List.count (fun (_, n) -> n <= steps && n mod 2 = steps mod 2)
 
-let part_one (input : char Matrix.t) : int =
+let part_one (input : char matrix) : int =
   let (Some start) = Matrix.find (( = ) 'S') input in
   reachable_from input start 64
 
@@ -61,7 +61,7 @@ let part_one (input : char Matrix.t) : int =
  * polarities, so after counting the total number of traveresed tiles, we have
  * to add/subtract the corners back in.
  *)
-let reachable_plots (steps : int) (garden : char Matrix.t) =
+let reachable_plots (steps : int) (garden : char matrix) =
   let rows, cols = Matrix.size garden in
   let steps_from' c = steps_from garden c ||> Pair.right in
   let odds f = List.count (fun n -> n mod 2 = 1 && f n) in
@@ -88,7 +88,7 @@ let reachable_plots (steps : int) (garden : char Matrix.t) =
   - ((n + 1) * odd_corners)
   + (n * even_corners)
 
-let part_two (input : char Matrix.t) : int = reachable_plots 26501365 input
+let part_two (input : char matrix) : int = reachable_plots 26501365 input
 
 (*
  * Main

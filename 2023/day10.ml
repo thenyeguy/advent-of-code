@@ -3,7 +3,7 @@ open Utils
 (*
  * Types
  *)
-type map = char Matrix.t
+type map = char matrix
 
 (*
  * Parse input
@@ -14,10 +14,10 @@ let puzzle_input = Io.read_lines "2023/data/10.txt" |> parse_map
 (*
  * Part 1
  *)
-let rec is_adjacent (map : map) (c1 : Coord.t) (c2 : Coord.t) : bool =
+let rec is_adjacent (map : map) (c1 : coord) (c2 : Coord.t) : bool =
   try adjacencies map c2 |> List.mem c1 with Invalid_argument _ -> false
 
-and adjacencies (map : map) ((r, c) : Coord.t) : Coord.t list =
+and adjacencies (map : map) ((r, c) : coord) : Coord.t list =
   match Matrix.get map (r, c) with
   | 'S' ->
       (* work backwards from starting spot to find adjacencies *)
@@ -33,7 +33,7 @@ and adjacencies (map : map) ((r, c) : Coord.t) : Coord.t list =
 
 (* Counts how many steps from the start each reachable pipe is. *)
 let count_steps (map : map) : int Coord.Map.t =
-  let rec bfs (frontier : Coord.t list) (seen : int Coord.Map.t) (steps : int) =
+  let rec bfs (frontier : coord list) (seen : int Coord.Map.t) (steps : int) =
     if List.is_empty frontier then seen
     else
       let is_unseen c = not (Coord.Map.mem c seen) in
@@ -87,7 +87,7 @@ let flood_fill (map : map) : map =
       else []
     with Invalid_argument _ -> []
   in
-  let rec bfs (frontier : Coord.t list) =
+  let rec bfs (frontier : coord list) =
     if not (List.is_empty frontier) then bfs (frontier ||> flood |> List.flatten)
   in
   bfs [ (0, 0) ];

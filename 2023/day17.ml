@@ -16,14 +16,14 @@ let puzzle_input =
  * Part 1
  *)
 module Graph = struct
-  type t = int * int * int Matrix.t
-  type node = Coord.t * Coord.dir
+  type t = int * int * int matrix
+  type node = coord * dir
 
   let neighbors ((min_steps, max_steps, map) : t) ((coord, dir) : node) :
       node list =
     let steps dir =
       let step n = (Coord.step ~steps:n coord dir, dir) in
-      List.range ~from:min_steps (max_steps + 1) ||> step
+      List.irange ~from:min_steps max_steps ||> step
     in
     Coord.orthogonal_dirs dir |> List.concat_map steps
     |> List.filter (fun (c, _) -> Matrix.in_bounds map c)
@@ -47,17 +47,17 @@ end
 module Search = Search.Make (Graph)
 
 let find_shortest_path ?(min_steps : int = 1) ~(max_steps : int)
-    (map : int Matrix.t) =
+    (map : int matrix) =
   Search.find_shortest_path
     (min_steps, max_steps, map)
     [ ((0, 0), Right); ((0, 0), Down) ]
 
-let part_one (map : int Matrix.t) : int = find_shortest_path ~max_steps:3 map
+let part_one (map : int matrix) : int = find_shortest_path ~max_steps:3 map
 
 (*
  * Part 2
  *)
-let part_two (map : int Matrix.t) : int =
+let part_two (map : int matrix) : int =
   find_shortest_path ~min_steps:4 ~max_steps:10 map
 
 (*

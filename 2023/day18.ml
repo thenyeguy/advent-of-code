@@ -3,7 +3,7 @@ open Utils
 (*
  * Types
  *)
-type trench = { dir : Coord.dir; length : int; color : string }
+type trench = { dir : dir; length : int; color : string }
 
 (*
  * Parse input
@@ -21,21 +21,21 @@ let puzzle_input = Io.read_lines "2023/data/18.txt" ||> parse_trench
  * Part 1
  *)
 (* Get a list of vertices for the trenches. *)
-let dig_trenches (dig_plan : trench list) : Coord.t list =
+let dig_trenches (dig_plan : trench list) : coord list =
   let next_vertex acc trench =
     (Coord.step ~steps:trench.length acc trench.dir, acc)
   in
   List.fold_left_map next_vertex (0, 0) dig_plan |> Pair.right
 
-let trench_area (vertices : Coord.t list) : int =
-  let perimeter (vertices : Coord.t list) : int =
+let trench_area (vertices : coord list) : int =
+  let perimeter (vertices : coord list) : int =
     let rest = vertices |> List.pair_map Coord.manhattan_distance |> List.sum in
     let last =
       Coord.manhattan_distance (List.hd vertices) (List.last vertices)
     in
     rest + last
   in
-  let shoelace_area (vertices : Coord.t list) : int =
+  let shoelace_area (vertices : coord list) : int =
     let half n = n / 2 in
     let det (r1, c1) (r2, c2) = (r1 * c2) - (r2 * c1) in
     vertices |> List.pair_map det |> List.sum |> half

@@ -8,7 +8,7 @@ let puzzle_input () = Io.read_lines "2023/data/11.txt" |> Matrix.of_strings
 (*
  * Part 1
  *)
-let find_stars ?(expansion : int = 2) (map : char Matrix.t) : Coord.t list =
+let find_stars ?(expansion : int = 2) (map : char matrix) : coord list =
   (* Convert to a bool matrix. *)
   let empties = Matrix.map (( = ) '.') map in
   (* Expand empty rows to create a new coordinate row/col mapping. *)
@@ -25,7 +25,7 @@ let find_stars ?(expansion : int = 2) (map : char Matrix.t) : Coord.t list =
   Matrix.iteri add_star empties;
   !coords
 
-let part_one (map : char Matrix.t) : int =
+let part_one (map : char matrix) : int =
   map |> find_stars |> List.combinations
   ||> Pair.apply Coord.manhattan_distance
   |> List.sum
@@ -33,7 +33,7 @@ let part_one (map : char Matrix.t) : int =
 (*
  * Part 2
  *)
-let part_two (map : char Matrix.t) : int =
+let part_two (map : char matrix) : int =
   map
   |> find_stars ~expansion:1000000
   |> List.combinations

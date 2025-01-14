@@ -11,16 +11,15 @@ let puzzle_input =
 (*
  * Part 1
  *)
-let find_trailheads (m : int Matrix.t) : Coord.t list =
-  Matrix.find_all (( = ) 0) m
+let find_trailheads (m : int matrix) : coord list = Matrix.find_all (( = ) 0) m
 
-let neighbors (m : int Matrix.t) (c : Coord.t) =
+let neighbors (m : int matrix) (c : coord) =
   let h = Matrix.get m c in
   let is_valid c' = Matrix.get_opt m c' = Some (h + 1) in
   List.filter is_valid (Coord.adjacencies c)
 
-let trail_score (m : int Matrix.t) (trailhead : Coord.t) : int =
-  let rec dfs (seen : Coord.Set.t) (frontier : Coord.t list) : Coord.Set.t =
+let trail_score (m : int matrix) (trailhead : coord) : int =
+  let rec dfs (seen : Coord.Set.t) (frontier : coord list) : Coord.Set.t =
     match frontier with
     | [] -> seen
     | c :: cs ->
@@ -40,8 +39,8 @@ let part_one input = find_trailheads input ||> trail_score input |> List.sum
 (*
  * Part 2
  *)
-let trail_rating (m : int Matrix.t) (trailhead : Coord.t) : int =
-  let rec rating (c : Coord.t) : int =
+let trail_rating (m : int matrix) (trailhead : coord) : int =
+  let rec rating (c : coord) : int =
     if Matrix.get m c = 9 then 1 else neighbors m c ||> rating |> List.sum
   in
   rating trailhead

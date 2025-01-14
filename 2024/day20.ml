@@ -9,8 +9,8 @@ let puzzle_input = Io.read_lines "2024/data/20.txt" |> Matrix.of_strings
  * Part 1
  *)
 module Graph = struct
-  type t = char Matrix.t
-  type node = Coord.t
+  type t = char matrix
+  type node = coord
 
   let starts (g : t) : node list = [ Matrix.find (( = ) 'S') g |> Option.get ]
 
@@ -35,9 +35,9 @@ let reachables ~(steps : int) (g : Graph.t) (pos : Graph.node) : Graph.node list
       |> List.sort_uniq compare ||> Coord.add pos
       |> List.filter (Graph.is_open_space g)
     in
-    List.range (steps - x + 1) |> List.concat_map all_four
+    List.irange (steps - x) |> List.concat_map all_four
   in
-  List.range (steps + 1) |> List.concat_map reachables_inner
+  List.irange steps |> List.concat_map reachables_inner
 
 (* Finds all cheats, keyed by home much time they save *)
 let find_all_cheats ~(steps : int) (g : Graph.t) : int IntMap.t =

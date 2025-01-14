@@ -9,8 +9,8 @@ let puzzle_input = Io.read_lines "2024/data/18.txt" ||> Coord.coord_of_string
  * Part 1
  *)
 module Graph = struct
-  type t = Coord.Set.t * Coord.t
-  type node = Coord.t
+  type t = Coord.Set.t * coord
+  type node = coord
 
   let neighbors ((bytes, goal) : t) (pos : node) : node list =
     let is_open c =
@@ -31,8 +31,7 @@ let part_one ?(num_bytes = 1024) ?(goal = (70, 70)) input =
 (*
  * Part 2
  *)
-let rec find_blocking_coord ?(goal = (70, 70)) (coords : Coord.t list) : Coord.t
-    =
+let rec find_blocking_coord ?(goal = (70, 70)) (coords : coord list) : Coord.t =
   match coords with
   | [] -> raise (Failure "no block found")
   | c :: cs -> (
