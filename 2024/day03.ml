@@ -40,14 +40,14 @@ let parse (input : string) : command list =
         match cs with
         | ',' :: cs' -> parse' cs' (Right (l, 0))
         | ('0' .. '9' as c) :: cs' ->
-            let l' = (10 * l) + Char.digit_of_char c in
+            let l' = (10 * l) + Char.to_digit c in
             parse' cs' (Left l')
         | _ -> parse' cs Seeking)
     | Right (l, r) -> (
         match cs with
         | ')' :: cs' -> Mul (l, r) :: parse' cs' Seeking
         | ('0' .. '9' as c) :: cs' ->
-            let r' = (10 * r) + Char.digit_of_char c in
+            let r' = (10 * r) + Char.to_digit c in
             parse' cs' (Right (l, r'))
         | _ -> parse' cs Seeking)
   in

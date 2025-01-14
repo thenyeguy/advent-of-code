@@ -5,8 +5,7 @@ open Utils
  *)
 let puzzle_input =
   Io.read_lines "2024/data/10.txt"
-  |> Matrix.of_strings
-  |> Matrix.map Char.digit_of_char
+  |> Matrix.of_strings |> Matrix.map Char.to_digit
 
 (*
  * Part 1

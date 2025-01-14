@@ -18,7 +18,7 @@ let init_files (map : string) : file list =
         { id; size = b } :: { id = -1; size = e } :: init (id + 1) bs'
     | [ b ] -> [ { id; size = b } ]
   in
-  String.explode map ||> Char.digit_of_char |> init 0
+  String.explode map ||> Char.to_digit |> init 0
 
 (* Gets the number of non-empty blocks. *)
 let file_length (files : file list) : int =
