@@ -48,7 +48,7 @@ let repack_blocks (files : file list) : file list =
           fill @ repack front' back'
   in
   (* We are going to fill past the middle point, so just naively truncate *)
-  repack files (List.rev files) |> pop (file_length files) |> Pair.left
+  repack files (List.rev files) |> pop (file_length files) |> fst
 
 let checksum (files : file list) : int =
   let rec checksum' files i =

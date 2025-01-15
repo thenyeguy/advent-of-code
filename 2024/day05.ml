@@ -70,7 +70,7 @@ let reorder_pages (deps : IntSet.t IntMap.t) (pages : int list) : int list =
      order by count. *)
   let cmp (_, c1) (_, c2) = c2 - c1 in
   filter_deps deps pages |> IntMap.map IntSet.cardinal |> IntMap.to_list
-  |> List.sort cmp ||> Pair.left
+  |> List.sort cmp ||> fst
 
 let part_two (input : input_t) =
   let deps = make_deps input.page_orders in

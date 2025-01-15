@@ -1,17 +1,23 @@
-(* Identity function *)
+(** Identity function *)
 let id x = x
 
-(* Always returns a constant. *)
+(** Always returns a constant, ignoring the argument. *)
 let const c _ = c
 
-(* Reverse args (for currying) *)
-let swap f r l = f l r
+(** Converts a pair argument to curried arguments. *)
+let curry f l r = f (l, r)
 
-(* Repeatedly apply a function to its own output. *)
+(** Converts curried arguments to a pair argument. *)
+let uncurry f (l, r) = f l r
+
+(** Reverse argument order. *)
+let flip f r l = f l r
+
+(** Repeatedly apply a function to its own output. *)
 let rec repeat (f : 'a -> 'a) (n : int) (x : 'a) : 'a =
   if n = 0 then x else (repeat [@tailcall]) f (n - 1) (f x)
 
-(* Reversed operators (for currying) *)
+(* Reversed operators (for more readable currying) *)
 let lt r l = l < r
 let gt r l = l > r
 let lte r l = l <= r

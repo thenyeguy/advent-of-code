@@ -10,8 +10,8 @@ let puzzle_input = Io.read_lines "2024/data/22.txt" ||> int_of_string
  *)
 let mix (secret : int) (value : int) : int = Int.logxor secret value
 let prune (secret : int) : int = secret mod 16777216
-let lshft = Fn.swap Int.shift_left
-let rshft = Fn.swap Int.shift_right
+let lshft = Fn.flip Int.shift_left
+let rshft = Fn.flip Int.shift_right
 
 let next (secret : int) : int =
   let tick f s = mix s (f s) |> prune in
@@ -33,7 +33,7 @@ let prices ?(n : int = 2000) (secret : int) : int list =
     let s' = next s in
     (s', s mod 10)
   in
-  List.fold_left_map acc secret (List.range n) |> Pair.right
+  List.fold_left_map acc secret (List.range n) |> snd
 
 let rec sales (prices : int list) : int WindowMap.t =
   match prices with
@@ -48,7 +48,7 @@ let total_sales (sales : int WindowMap.t list) : WindowMap.key * int =
   let totals = List.fold_left (WindowMap.merge add) WindowMap.empty sales in
   WindowMap.fold max totals ((0, 0, 0, 0), 0)
 
-let part_two input = input ||> prices ||> sales |> total_sales |> Pair.right
+let part_two input = input ||> prices ||> sales |> total_sales |> snd
 
 (*
  * Main

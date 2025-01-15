@@ -59,7 +59,7 @@ let count_reachables (g : Graph.t) =
    * flipped, because we traverse bacwkards): *)
   let from_start = costs_from [ start g ] in
   let from_end = costs_from (ends g) |> flip_dir in
-  let combine_costs _ l r = Some (Option.get l + Option.get r) in
+  let combine_costs _ l r = Option.merge ( + ) l r in
   let combined_costs =
     Search.HistoryMap.merge combine_costs from_start from_end
   in

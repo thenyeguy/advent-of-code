@@ -25,7 +25,7 @@ let dig_trenches (dig_plan : trench list) : coord list =
   let next_vertex acc trench =
     (Coord.step ~steps:trench.length acc trench.dir, acc)
   in
-  List.fold_left_map next_vertex (0, 0) dig_plan |> Pair.right
+  List.fold_left_map next_vertex (0, 0) dig_plan |> snd
 
 let trench_area (vertices : coord list) : int =
   let perimeter (vertices : coord list) : int =

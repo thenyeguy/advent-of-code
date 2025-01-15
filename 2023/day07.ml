@@ -64,7 +64,7 @@ let count_cards (h : hand) : (card * int) list =
   Hashtbl.to_seq counts |> List.of_seq |> List.sort compare_counts |> List.rev
 
 let classify_hand (h : hand) : hand_type =
-  match List.map Pair.right (count_cards h) with
+  match List.map snd (count_cards h) with
   | [ 5 ] -> FiveOfAKind
   | 4 :: _ -> FourOfAKind
   | [ 3; 2 ] -> FullHouse

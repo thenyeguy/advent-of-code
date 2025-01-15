@@ -115,7 +115,7 @@ let part_one (input : comm_module list) : int =
 let edge_map (modules : comm_module list) : string list StringMap.t =
   let unpack edges =
     let dest, _ = List.hd edges in
-    let srcs = List.map Pair.right edges in
+    let srcs = List.map snd edges in
     (dest, srcs)
   in
   modules ||> get_edges ||> unpack |> StringMap.of_list

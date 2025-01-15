@@ -24,12 +24,9 @@ let to_int (f : float) : int option =
 
 let button_presses (m : machine) : (int * int) option =
   let a =
-    Matrix.map float_of_int
-      [|
-        [| Pair.left m.a; Pair.left m.b |]; [| Pair.right m.a; Pair.right m.b |];
-      |]
+    Matrix.map float_of_int [| [| fst m.a; fst m.b |]; [| snd m.a; snd m.b |] |]
   in
-  let b = Array.map float_of_int [| Pair.left m.prize; Pair.right m.prize |] in
+  let b = Array.map float_of_int [| fst m.prize; snd m.prize |] in
   let x = Lin_alg.solve a b in
   match (to_int x.(0), to_int x.(1)) with
   | Some a, Some b when a >= 0 && b >= 0 -> Some (a, b)

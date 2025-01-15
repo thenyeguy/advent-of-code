@@ -74,7 +74,7 @@ let run_program (program : program_t) (initial_state : state_t) : int list =
   run_program_inner initial_state [] |> List.rev
 
 let part_one =
-  Pair.apply run_program >> List.map string_of_int >> String.concat ","
+  Fn.uncurry run_program >> List.map string_of_int >> String.concat ","
 
 (*
  * Part 2

@@ -64,7 +64,7 @@ let drop_bricks (bricks : brick list) : brick list =
   in
   bricks |> List.sort compare_bricks
   |> List.fold_left_map accumulate Coord.Map.empty
-  |> Pair.right
+  |> snd
 
 let supports_brick (bottom : brick) (top : brick) : bool =
   if maxz bottom + 1 <> minz top then false
@@ -89,7 +89,7 @@ let get_edges (bricks : brick list) : (brick * brick) list =
 
 let edge_map (edges : (brick * brick) list) : brick list BrickMap.t =
   let should_group (l1, _) (l2, _) = l1 = l2 in
-  let build_key es = (Pair.left (List.hd es), List.map Pair.right es) in
+  let build_key es = (fst (List.hd es), List.map snd es) in
   edges |> List.sort compare |> List.group should_group ||> build_key
   |> BrickMap.of_list
 

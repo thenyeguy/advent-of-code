@@ -41,7 +41,7 @@ let in_region (lower : float) (upper : float) ((x, y) : vec2) : bool =
 let count_intersections (lower : float) (upper : float) (hs : hailstone list) :
     int =
   List.combinations hs
-  |> List.filter_map (Pair.apply path_intersection)
+  |> List.filter_map (Fn.uncurry path_intersection)
   |> List.count (in_region lower upper)
 
 let part_one = count_intersections 200000000000000. 400000000000000.

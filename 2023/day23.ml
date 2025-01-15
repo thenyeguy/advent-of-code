@@ -75,7 +75,7 @@ let get_edges (map : map) : (coord * Coord.t * int) list =
             neighbors ~climb:true map node ||> find_intersection map node
           in
           let edges' = nodes ||> fun (d, c) -> (node, d, c) in
-          let nodes' = nodes ||> Pair.left in
+          let nodes' = nodes ||> fst in
           bfs seen' (edges @ edges') (frontier' @ nodes')
   in
   bfs Coord.Set.empty [] [ (0, 1) ]
@@ -94,7 +94,7 @@ module EdgeGraph = struct
   type node = coord
 
   let neighbors ((edges, _) : t) (node : node) : node list =
-    Coord.Map.find node edges ||> Pair.left
+    Coord.Map.find node edges ||> fst
 
   let cost ((edges, _) : t) (src : node) (dest : node) : int =
     edges |> Coord.Map.find src |> List.assoc dest

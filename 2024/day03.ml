@@ -70,7 +70,7 @@ let eval (cs : command list) : int =
         let n' = if d then n + (l * r) else n in
         (d, n')
   in
-  List.fold_left acc (true, 0) cs |> Pair.right
+  List.fold_left acc (true, 0) cs |> snd
 
 let part_two input = input |> parse |> eval
 

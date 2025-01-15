@@ -94,7 +94,7 @@ let find_n_cut ?(n : int = 3) (components : component list) : component_map =
 
 let part_one (input : component list) : int =
   let cs = find_n_cut input in
-  StringMap.to_list cs ||> Pair.right ||> List.length |> List.product
+  StringMap.to_list cs ||> snd ||> List.length |> List.product
 
 (*
  * Part 2

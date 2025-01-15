@@ -48,7 +48,7 @@ let count_steps (map : map) : int Coord.Map.t =
   bfs [ start ] (Coord.Map.singleton start 0) 0
 
 let part_one (map : map) : int =
-  map |> count_steps |> Coord.Map.to_list ||> Pair.right |> List.fold_left max 0
+  map |> count_steps |> Coord.Map.to_list ||> snd |> List.fold_left max 0
 
 (*
  * Part 2

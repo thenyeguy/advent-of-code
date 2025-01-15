@@ -20,12 +20,12 @@ let similarity ls rs =
   let count l = List.count (( = ) l) rs * l in
   ls ||> count |> List.sum
 
-let part_one input = input |> Pair.apply distances |> List.sum
+let part_one input = input |> Fn.uncurry distances |> List.sum
 
 (*
  * Part 2
  *)
-let part_two input = input |> Pair.apply similarity
+let part_two input = input |> Fn.uncurry similarity
 
 (*
  * Main

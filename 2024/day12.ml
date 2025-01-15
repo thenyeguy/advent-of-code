@@ -84,7 +84,7 @@ let component_sides (component : CoordSet.t) : int =
     (* Group all edges by their major axis, then count how many contiguous
        segments there are. Each of these is one side. *)
     let same_axis (l1, _) (l2, _) = l1 = l2 in
-    List.sort compare cs |> List.group same_axis ||> List.map Pair.right
+    List.sort compare cs |> List.group same_axis ||> List.map snd
     ||> get_segments |> List.sum
   in
   let acc dir cs sides = sides + count_sides dir cs in

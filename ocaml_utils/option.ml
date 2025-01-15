@@ -9,5 +9,4 @@ let merge (f : 'a -> 'a -> 'a) (a : 'a option) (b : 'a option) : 'a option =
   | None, Some b -> Some b
   | None, None -> None
 
-let then_ (f : 'a -> 'b option) (a : 'a option) : 'b option =
-  match a with Some x -> f x | None -> None
+let rbind (f : 'a -> 'b option) (a : 'a option) : 'b option = bind a f

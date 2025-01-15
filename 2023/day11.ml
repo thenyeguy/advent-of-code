@@ -27,7 +27,7 @@ let find_stars ?(expansion : int = 2) (map : char matrix) : coord list =
 
 let part_one (map : char matrix) : int =
   map |> find_stars |> List.combinations
-  ||> Pair.apply Coord.manhattan_distance
+  ||> Fn.uncurry Coord.manhattan_distance
   |> List.sum
 
 (*
@@ -37,7 +37,7 @@ let part_two (map : char matrix) : int =
   map
   |> find_stars ~expansion:1000000
   |> List.combinations
-  ||> Pair.apply Coord.manhattan_distance
+  ||> Fn.uncurry Coord.manhattan_distance
   |> List.sum
 
 (*

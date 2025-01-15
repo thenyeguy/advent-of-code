@@ -79,7 +79,7 @@ let part_two input =
    *
    * I visually inspected the output to see that it actually produced a tree :)
    *)
-  safety_scores (width * height) input |> List.mini |> Pair.left
+  safety_scores (width * height) input |> List.mini |> fst
 
 (*
  * Main

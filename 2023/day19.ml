@@ -146,7 +146,7 @@ let count_valid_parts (workflows : rule list StringMap.t) : int =
     in
     StringMap.find label workflows
     |> List.fold_left_map run_rule (Some range)
-    |> Pair.right |> List.sum
+    |> snd |> List.sum
   in
   run_workflow "in"
     { xs = (1, 4000); ms = (1, 4000); as_ = (1, 4000); ss = (1, 4000) }

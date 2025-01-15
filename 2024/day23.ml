@@ -39,7 +39,7 @@ let find_triples (edges : edge_map) : TripleSet.t =
     SSet.to_list outgoing ||> inter
     |> List.concat_map make_triples
     |> List.filter is_sorted
-    |> List.fold_left (Fn.swap TripleSet.add) triples
+    |> List.fold_left (Fn.flip TripleSet.add) triples
   in
   SMap.fold find_triples_inner edges TripleSet.empty
 
@@ -62,9 +62,9 @@ let biggest_set (sets : SSet.t list) : SSet.t =
   List.fold_left acc SSet.empty sets
 
 let largest_component (edges : edge_map) : SSet.t =
-  let keys = SMap.bindings edges ||> Pair.left |> SSet.of_list in
+  let keys = SMap.bindings edges ||> fst |> SSet.of_list in
   let rec expand_component (nodes : SSet.t) : SSet.t =
-    let new_edges n = SMap.find n edges |> Fn.swap SSet.diff nodes in
+    let new_edges n = SMap.find n edges |> Fn.flip SSet.diff nodes in
     let candidates =
       SSet.to_list nodes ||> new_edges |> List.fold_left SSet.inter keys
     in

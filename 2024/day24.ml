@@ -62,7 +62,7 @@ let topological_sort (gates : gates_t) : gates_t =
       let ((_, _, _, o) as i), is = pop_instruction seen instrs in
       i :: tsort (StringSet.add o seen) is
   in
-  let initials = gates.values ||> Pair.left |> StringSet.of_list in
+  let initials = gates.values ||> fst |> StringSet.of_list in
   let instructions = tsort initials gates.instructions in
   { values = gates.values; instructions }
 
@@ -154,7 +154,7 @@ let check_adders (gates : gates_t) =
   let _, _, _, c0 = StringMap.find "x00" edges |> List.find is_and in
   List.range ~from:1 45
   |> List.fold_left_map check_adder c0
-  |> Pair.right |> List.flatten |> List.sort_uniq compare
+  |> snd |> List.flatten |> List.sort_uniq compare
   |> List.filter (( <> ) "")
 
 let part_two = check_adders >> String.concat ","

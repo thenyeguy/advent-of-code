@@ -120,11 +120,10 @@ let rec push_wide_box (state : warehouse_state) (pos : coord) (dir : dir) :
   (match dir with
   | Coord.Up | Coord.Down ->
       push_half pos' state
-      |> Option.then_ (push_half (pos' ++ (0, 1)))
-      |> Option.then_ move_box
+      |> Option.rbind (push_half (pos' ++ (0, 1)))
   | Coord.Left -> push_half pos' state
   | Coord.Right -> push_half (pos' ++ (0, 1)) state)
-  |> Option.then_ move_box
+  |> Option.rbind move_box
 
 let apply_wide_move (state : warehouse_state) (dir : dir) : warehouse_state =
   let p = Coord.step state.robot dir in

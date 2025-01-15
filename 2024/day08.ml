@@ -23,7 +23,7 @@ let close_antinodes (_ : char matrix) ((r1, c1) : coord) ((r2, c2) : coord) :
 let all_antinodes antinode_fn (m : char matrix) : Coord.Set.t =
   let compute_antinodes (antennas : coord list) : Coord.Set.t =
     List.combinations antennas
-    ||> Pair.apply (antinode_fn m)
+    ||> Fn.uncurry (antinode_fn m)
     ||> Coord.Set.of_list
     |> List.fold_left Coord.Set.union Coord.Set.empty
     |> Coord.Set.filter (Matrix.in_bounds m)

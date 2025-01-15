@@ -63,7 +63,7 @@ let part_one (input : char matrix) : int =
  *)
 let reachable_plots (steps : int) (garden : char matrix) =
   let rows, cols = Matrix.size garden in
-  let steps_from' c = steps_from garden c ||> Pair.right in
+  let steps_from' c = steps_from garden c ||> snd in
   let odds f = List.count (fun n -> n mod 2 = 1 && f n) in
   let evens f = List.count (fun n -> n mod 2 = 0 && f n) in
   let all = steps_from' (rows / 2, cols / 2) in

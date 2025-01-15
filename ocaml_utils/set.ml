@@ -1,5 +1,5 @@
 include Stdlib.Set
-include Fn.Infix
+open Fn.Infix
 
 module Make (Ord : OrderedType) = struct
   include Stdlib.Set.Make (Ord)
