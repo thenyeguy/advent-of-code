@@ -83,9 +83,7 @@ let get_edges (map : map) : (coord * Coord.t * int) list =
 let make_edge_map (edges : (coord * Coord.t * int) list) : edge_map =
   let add_edge edges (src, dest, cost) =
     let append e existing =
-      match existing with
-      | None -> Option.some [ e ]
-      | Some es -> Option.some (e :: es)
+      match existing with None -> Some [ e ] | Some es -> Some (e :: es)
     in
     Coord.Map.update src (append (dest, cost)) edges
   in

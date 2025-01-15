@@ -41,7 +41,7 @@ let count_steps (map : map) : int Coord.Map.t =
         frontier ||> adjacencies map |> List.flatten |> List.filter is_unseen
       in
       let seen' = frontier ||> (fun c -> (c, steps)) |> Coord.Map.of_list in
-      let map_merge _ l r = Option.some (min l r) in
+      let map_merge _ l r = Some (min l r) in
       bfs frontier' (Coord.Map.union map_merge seen seen') (steps + 1)
   in
   let (Some start) = Matrix.find (( = ) 'S') map in

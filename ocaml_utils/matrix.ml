@@ -28,7 +28,7 @@ let in_bounds (m : 'a t) ((row, col) : Coord.t) =
   0 <= row && row < rows m && 0 <= col && col < cols m
 
 let get_opt (m : 'a t) (c : Coord.t) : 'a option =
-  if in_bounds m c then Option.some (get m c) else Option.none
+  if in_bounds m c then Some (get m c) else None
 
 let transpose (m : 'a t) : 'a t = to_seq m |> Seq.transpose |> of_seq
 
@@ -66,10 +66,8 @@ let coords (m : 'a t) : Coord.t list =
 let find (f : 'a -> bool) (m : 'a t) : (int * int) option =
   let cols = Array.map (Array.find_index f) m in
   let row = Array.find_index Option.is_some cols in
-  let col = Array.fold_left Option.or_ Option.none cols in
-  match (row, col) with
-  | Some r, Some c -> Option.some (r, c)
-  | _ -> Option.none
+  let col = Array.fold_left Option.or_ None cols in
+  match (row, col) with Some r, Some c -> Some (r, c) | _ -> None
 
 let find_all (f : 'a -> bool) (m : 'a t) : Coord.t list =
   let matching_coords row col value =

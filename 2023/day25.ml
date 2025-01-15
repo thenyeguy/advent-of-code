@@ -31,9 +31,7 @@ let make_edge_map (components : component list) : edge_map =
   in
   let add_edge edges (src, dest) =
     let append e existing =
-      match existing with
-      | None -> Option.some [ e ]
-      | Some es -> Option.some (e :: es)
+      match existing with None -> Some [ e ] | Some es -> Some (e :: es)
     in
     edges
     |> StringMap.update src (append dest)

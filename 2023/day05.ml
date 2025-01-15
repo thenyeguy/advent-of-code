@@ -30,8 +30,7 @@ let puzzle_input () = Io.read_lines "2023/data/05.txt" |> parse_input
 let map_value (n : int) (ms : mapping list) : int =
   let map_value' (n : int) (m : mapping) : int option =
     let offset = n - m.src in
-    if 0 <= offset && offset < m.mlength then Option.some (m.dest + offset)
-    else Option.none
+    if 0 <= offset && offset < m.mlength then Some (m.dest + offset) else None
   in
   match List.filter_map (map_value' n) ms with [ nn ] -> nn | _ -> n
 
@@ -49,19 +48,18 @@ let split_range (m : mapping) (r : range) : range option list * range option =
     (m.src, m.src + m.mlength, r.start, r.start + r.rlength)
   in
   let left =
-    if rs < ms then Option.some { start = rs; rlength = min re ms - rs }
-    else Option.none
+    if rs < ms then Some { start = rs; rlength = min re ms - rs } else None
   in
   let middle =
     if rs < me && ms < re then
       let s, e = (max rs ms, min re me) in
       let offset = s - ms in
-      Option.some { start = m.dest + offset; rlength = e - s }
-    else Option.none
+      Some { start = m.dest + offset; rlength = e - s }
+    else None
   in
   let right =
-    if me < re then Option.some { start = max rs me; rlength = re - max rs me }
-    else Option.none
+    if me < re then Some { start = max rs me; rlength = re - max rs me }
+    else None
   in
   ([ left; right ], middle)
 

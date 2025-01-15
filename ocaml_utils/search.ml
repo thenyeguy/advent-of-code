@@ -47,14 +47,12 @@ module PQueue = struct
    * Returns (updated queue, value, priority).
    *)
   let pop (q : 'a t) : ('a t * 'a * int) option =
-    let update' values _ =
-      if List.is_empty values then Option.none else Option.some values
-    in
+    let update' values _ = if List.is_empty values then None else Some values in
     match IntMap.min_binding_opt q with
     | Some (priority, value :: values) ->
         let q' = IntMap.update priority (update' values) q in
-        Option.some (q', value, priority)
-    | None -> Option.none
+        Some (q', value, priority)
+    | None -> None
     | _ -> raise (Failure "PQueue.pop")
 end
 

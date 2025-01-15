@@ -29,12 +29,11 @@ let path_intersection (h1 : hailstone) (h2 : hailstone) : vec2 option =
   let (x3, y3, _), (dx2, dy2, _) = (h2.pos, h2.velocity) in
   let x4, y4 = (x3 +. dx2, y3 +. dy2) in
   let d = ((x1 -. x2) *. (y3 -. y4)) -. ((y1 -. y2) *. (x3 -. x4)) in
-  if d = 0. then Option.none
+  if d = 0. then None
   else
     let t = (((x1 -. x3) *. (y3 -. y4)) -. ((y1 -. y3) *. (x3 -. x4))) /. d in
     let u = (((x1 -. x3) *. (y1 -. y2)) -. ((y1 -. y3) *. (x1 -. x2))) /. d in
-    if t < 0. || u < 0. then Option.none
-    else Option.some (x1 +. (t *. dx1), y1 +. (t *. dy1))
+    if t < 0. || u < 0. then None else Some (x1 +. (t *. dx1), y1 +. (t *. dy1))
 
 let in_region (lower : float) (upper : float) ((x, y) : vec2) : bool =
   lower <= x && x <= upper && lower <= y && y <= upper

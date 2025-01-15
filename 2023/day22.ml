@@ -129,7 +129,7 @@ let count_chain_reactions (bricks : brick list) : int =
       in
       let remove_from_tops acc top =
         let update (Some existing) =
-          Option.some (List.filter (fun b -> not (List.mem b bs)) existing)
+          Some (List.filter (fun b -> not (List.mem b bs)) existing)
         in
         BrickMap.update top update acc
       in

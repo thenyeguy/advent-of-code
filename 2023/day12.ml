@@ -40,16 +40,16 @@ let count_valid_springs (row : row) : int =
   (* Appends the provided character to the run, if valid. *)
   let append (next_spring : char) (wip : wip_run) : wip_run option =
     match (next_spring, wip) with
-    | '#', { current = None; remaining = []; _ } -> Option.none
+    | '#', { current = None; remaining = []; _ } -> None
     | '#', { current = None; remaining = next :: remaining; count } ->
-        Option.some { current = Option.some (next - 1); remaining; count }
-    | '#', { current = Some 0; _ } -> Option.none
+        Some { current = Some (next - 1); remaining; count }
+    | '#', { current = Some 0; _ } -> None
     | '#', { current = Some c; remaining; count } ->
-        Option.some { current = Option.some (c - 1); remaining; count }
-    | '.', { current = None; _ } -> Option.some wip
+        Some { current = Some (c - 1); remaining; count }
+    | '.', { current = None; _ } -> Some wip
     | '.', { current = Some 0; remaining; count } ->
-        Option.some { current = Option.none; remaining; count }
-    | '.', { current = Some _; _ } -> Option.none
+        Some { current = None; remaining; count }
+    | '.', { current = Some _; _ } -> None
   in
   (* Combines a series of identical runs by summing their counts. *)
   let collapse (wips : wip_run Seq.t) : wip_run =
@@ -78,7 +78,7 @@ let count_valid_springs (row : row) : int =
     | Some 0, [] -> acc + wip.count
     | _ -> acc
   in
-  let start = { current = Option.none; remaining = row.runs; count = 1 } in
+  let start = { current = None; remaining = row.runs; count = 1 } in
   List.fold_left step [ start ] row.springs |> List.fold_left count_complete 0
 
 let part_one (input : row list) = input ||> count_valid_springs |> List.sum

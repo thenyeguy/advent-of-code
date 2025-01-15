@@ -60,18 +60,18 @@ let run_rule ((op, result) : rule) (part : part) : result option =
     match a with X -> p.x | M -> p.m | A -> p.a | S -> p.s
   in
   let apply op attr n =
-    if op (get_attr attr part) n then Option.some result else Option.none
+    if op (get_attr attr part) n then Some result else None
   in
   match op with
   | Less (attr, n) -> apply ( < ) attr n
   | Greater (attr, n) -> apply ( > ) attr n
-  | Always -> Option.some result
+  | Always -> Some result
 
 let run_workflows (workflows : rule list StringMap.t) (part : part) : bool =
   let rec run_workflow label =
     let rules = StringMap.find label workflows in
     let apply acc rule = Option.or_ acc (run_rule rule part) in
-    match List.fold_left apply Option.none rules with
+    match List.fold_left apply None rules with
     | Some Accept -> true
     | Some Reject -> false
     | Some (Run w) -> run_workflow w
@@ -95,13 +95,13 @@ let split_range (op : op) (range : range) : range option * range option =
   let lower, upper = range in
   match op with
   | Less (_, n) ->
-      if upper < n then Option.(some range, none)
-      else if lower >= n then Option.(none, some range)
-      else Option.(some (lower, n - 1), some (n, upper))
+      if upper < n then (Some range, None)
+      else if lower >= n then (None, Some range)
+      else (Some (lower, n - 1), Some (n, upper))
   | Greater (_, n) ->
-      if upper <= n then Option.(none, some range)
-      else if lower > n then Option.(some range, none)
-      else Option.(some (n + 1, upper), some (lower, n))
+      if upper <= n then (None, Some range)
+      else if lower > n then (Some range, None)
+      else (Some (n + 1, upper), Some (lower, n))
 
 let split_part (op : op) (part : part_range) :
     part_range option * part_range option =
@@ -125,12 +125,12 @@ let count_valid_parts (workflows : rule list StringMap.t) : int =
   let rec run_workflow (label : string) (range : part_range) : int =
     let run_rule range' rule =
       match range' with
-      | None -> (Option.none, 0)
+      | None -> (None, 0)
       | Some range' ->
           let op, result = rule in
           let left, right =
             match op with
-            | Always -> (Option.some range', Option.none)
+            | Always -> (Some range', None)
             | _ -> split_part op range'
           in
           let count =
@@ -145,7 +145,7 @@ let count_valid_parts (workflows : rule list StringMap.t) : int =
           (right, count)
     in
     StringMap.find label workflows
-    |> List.fold_left_map run_rule (Option.some range)
+    |> List.fold_left_map run_rule (Some range)
     |> Pair.right |> List.sum
   in
   run_workflow "in"

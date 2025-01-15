@@ -42,7 +42,7 @@ let count_steps (m : map) (is_end_node : string -> bool)
   let rec count_steps' node dirs steps =
     if is_end_node node then steps
     else
-      let (Option.Some (dir, dirs)) = Seq.uncons dirs in
+      let (Some (dir, dirs)) = Seq.uncons dirs in
       count_steps' (next_node node_map dir node) dirs (steps + 1)
   in
   count_steps' starting_node m.directions 0

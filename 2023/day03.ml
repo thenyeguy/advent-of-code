@@ -6,9 +6,9 @@ type part = { part_pos : coord list; num : int }
 let symbols_in_row (rowi : int) (row : string) : symbol list =
   let symbol_idx i c =
     match c with
-    | '0' .. '9' -> Option.none
-    | '.' -> Option.none
-    | _ -> Option.some { sym_pos = (rowi, i); sym = c }
+    | '0' .. '9' -> None
+    | '.' -> None
+    | _ -> Some { sym_pos = (rowi, i); sym = c }
   in
   String.explode row |> List.mapi symbol_idx |> List.filter_none
 
@@ -26,14 +26,13 @@ let parts_in_row (rowi : int) (row : string) : part list =
   let accumulate_parts acc (coli, c) =
     match (acc, c) with
     | None, '0' .. '9' ->
-        ( Option.some { part_pos = [ (rowi, coli) ]; num = parse_digit c },
-          Option.none )
-    | None, _ -> (Option.none, Option.none)
-    | Some p, '0' .. '9' -> (Option.some (add_to_part p coli c), Option.none)
-    | Some p, _ -> (Option.none, Option.some p)
+        (Some { part_pos = [ (rowi, coli) ]; num = parse_digit c }, None)
+    | None, _ -> (None, None)
+    | Some p, '0' .. '9' -> (Some (add_to_part p coli c), None)
+    | Some p, _ -> (None, Some p)
   in
   let digits = String.explode row |> List.mapi Pair.pack in
-  let acc, parts = digits |> List.fold_left_map accumulate_parts Option.none in
+  let acc, parts = digits |> List.fold_left_map accumulate_parts None in
   let parts = List.filter_none parts in
   match acc with Some p -> p :: parts | None -> parts
 
@@ -54,8 +53,8 @@ let adjacent_parts (parts : part list) (symbol : symbol) : part list =
 
 let gear_ratio (parts : part list) (symbol : symbol) : int option =
   match (symbol.sym, adjacent_parts parts symbol) with
-  | '*', p1 :: p2 :: _ -> Option.some (p1.num * p2.num)
-  | _ -> Option.none
+  | '*', p1 :: p2 :: _ -> Some (p1.num * p2.num)
+  | _ -> None
 
 let puzzle_input () = Io.read_lines "2023/data/03.txt"
 

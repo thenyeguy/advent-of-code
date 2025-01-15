@@ -22,8 +22,8 @@ let read_lines (fname : string) : string list =
 let split_blocks (input : string list) : string list list =
   let accumulate block line =
     match line with
-    | "" -> ([], Option.some block)
-    | _ -> (List.append block [ line ], Option.none)
+    | "" -> ([], Some block)
+    | _ -> (List.append block [ line ], None)
   in
   let block, blocks = List.fold_left_map accumulate [] input in
   List.append (List.filter_none blocks) [ block ]

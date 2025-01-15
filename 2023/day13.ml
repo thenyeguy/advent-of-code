@@ -19,11 +19,11 @@ let find_row_reflection ?(smudges = 0) (pattern : char matrix) : int option =
     Seq.map2 count_line_smudges left right |> Seq.fold_left ( + ) 0
   in
   let rec find_row_reflection' left right count =
-    if count_smudges left right = smudges then Option.some count
+    if count_smudges left right = smudges then Some count
     else
       match right with
-      | [] -> Option.none
-      | [ _ ] -> Option.none
+      | [] -> None
+      | [ _ ] -> None
       | r :: right' -> find_row_reflection' (r :: left) right' (count + 1)
   in
   let (first :: rest) = Array.to_list pattern in
