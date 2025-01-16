@@ -41,17 +41,18 @@ let reachables ~(steps : int) (g : Graph.t) (pos : Graph.node) : Graph.node list
 
 (* Finds all cheats, keyed by home much time they save *)
 let find_all_cheats ~(steps : int) (g : Graph.t) : int IntMap.t =
+  let module NodeMap = Search.NodeMap in
   let node_costs = Search.find_distance_from g (Graph.starts g) in
   let acc_cheats src cost costs =
     let cheat_cost dst =
       let dist = Coord.manhattan_distance src dst in
-      let saving = Search.HistoryMap.find dst node_costs - cost - dist in
+      let saving = NodeMap.find dst node_costs - cost - dist in
       if saving > 0 then Some saving else None
     in
     reachables ~steps g src |> List.filter_map cheat_cost
     |> List.fold_left IntMap.increment costs
   in
-  Search.HistoryMap.fold acc_cheats node_costs IntMap.empty
+  NodeMap.fold acc_cheats node_costs IntMap.empty
 
 let above_threshold ?(thresh : int = 100) (cheats : int IntMap.t) : int =
   let acc saving count total =
