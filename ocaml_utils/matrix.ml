@@ -83,3 +83,12 @@ let find_all (f : 'a -> bool) (m : 'a t) : Coord.t list =
     match coord with Some c -> c :: coords | None -> coords
   in
   mapi matching_coords m |> fold acc []
+
+let findi_all (f : Coord.t -> 'a -> bool) (m : 'a t) : Coord.t list =
+  let matching_coords row col value =
+    if f (row, col) value then Some (row, col) else None
+  in
+  let acc coords coord =
+    match coord with Some c -> c :: coords | None -> coords
+  in
+  mapi matching_coords m |> fold acc []
