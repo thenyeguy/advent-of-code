@@ -6,6 +6,9 @@ module Make (Ord : OrderedType) = struct
   (* Returns whether the map contains the given key. *)
   let contains (m : 'a t) (k : Ord.t) : bool = find_opt k m |> Option.is_some
 
+  (* Gets the keys in the map. *)
+  let keys (m : 'a t) : Ord.t list = to_list m |> List.map fst
+
   (* Increments the value of a given key in the map. *)
   let increment ?(count : int = 1) (m : int t) (x : Ord.t) =
     let increment' (v : int option) =
