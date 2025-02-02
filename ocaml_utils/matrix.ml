@@ -92,3 +92,15 @@ let findi_all (f : Coord.t -> 'a -> bool) (m : 'a t) : Coord.t list =
     match coord with Some c -> c :: coords | None -> coords
   in
   mapi matching_coords m |> fold acc []
+
+let findi_all_map (f : Coord.t -> 'a -> 'b option) (m : 'a t) :
+    (Coord.t * 'b) list =
+  let apply row col value =
+    match f (row, col) value with
+    | Some r -> Some ((row, col), r)
+    | None -> None
+  in
+  let acc coords coord =
+    match coord with Some c -> c :: coords | None -> coords
+  in
+  mapi apply m |> fold acc []
