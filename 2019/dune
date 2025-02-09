@@ -23,7 +23,7 @@
   day20
   day21
   day22)
- (libraries intcode utils))
+ (libraries intcode stdint utils))
 
 (env
  (dev

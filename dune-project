@@ -7,5 +7,5 @@
 (package
  (name aoc)
  (synopsis "Advent of Code solutions")
- (depends ocaml dune)
+ (depends ocaml dune stdint)
  (allow_empty))
