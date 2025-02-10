@@ -22,7 +22,8 @@
   day19
   day20
   day21
-  day22)
+  day22
+  day23)
  (libraries intcode stdint utils))
 
 (env
