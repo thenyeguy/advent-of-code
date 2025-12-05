@@ -36,6 +36,14 @@ let in_bounds (m : 'a t) ((row, col) : Coord.t) =
 let get_opt (m : 'a t) (c : Coord.t) : 'a option =
   if in_bounds m c then Some (get m c) else None
 
+(* Gets all orthogonally adjacent, in-bounds values to [c]. *)
+let adjacencies (m : 'a t) (c : Coord.t) : 'a list =
+  List.filter_map (get_opt m) (Coord.adjacencies c)
+
+(* Gets all surrounding, in-bounds values to [c]. *)
+let surrounding (m : 'a t) (c : Coord.t) : 'a list =
+  List.filter_map (get_opt m) (Coord.surrounding c)
+
 let transpose (m : 'a t) : 'a t = to_seq m |> Seq.transpose |> of_seq
 
 (* Rotates the matrix clockwise. *)
@@ -104,3 +112,11 @@ let findi_all_map (f : Coord.t -> 'a -> 'b option) (m : 'a t) :
     match coord with Some c -> c :: coords | None -> coords
   in
   mapi apply m |> fold acc []
+
+let count (f : 'a -> bool) (m : 'a t) : int =
+  let acc sum a = if f a then sum + 1 else sum in
+  fold acc 0 m
+
+let counti (f : Coord.t -> 'a -> bool) (m : 'a t) : int =
+  let f' r c v = if f (r, c) v then 1 else 0 in
+  mapi f' m |> fold ( + ) 0

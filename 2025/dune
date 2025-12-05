@@ -1,5 +1,5 @@
 (executables
- (names day00 day01 day02 day03)
+ (names day00 day01 day02 day03 day04)
  (libraries utils))
 
 (env

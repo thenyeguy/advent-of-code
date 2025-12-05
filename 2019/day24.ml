@@ -14,7 +14,7 @@ let becomes_bug (is_bug : bool) (adjacent_bugs : int) : bool =
   adjacent_bugs = 1 || ((not is_bug) && adjacent_bugs = 2)
 
 let adjacent_bugs (m : char matrix) (c : coord) : int =
-  Coord.adjacencies c ||> Matrix.get_opt m |> List.count (( = ) (Some '#'))
+  List.count (( = ) '#') (Matrix.adjacencies m c)
 
 let tick_space (m : char matrix) (row : int) (col : int) (bug : char) : char =
   if becomes_bug (bug = '#') (adjacent_bugs m (row, col)) then '#' else '.'
