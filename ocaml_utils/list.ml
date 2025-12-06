@@ -94,7 +94,9 @@ let rec combinations (list : 'a list) : ('a * 'a) list =
 let of_string ?(sep : char = ' ') ?(f : string -> 'a = int_of_string)
     (s : string) : 'a list =
   let open Fn.Infix in
-  Stdlib.String.split_on_char sep s |> Stdlib.List.map (Stdlib.String.trim >> f)
+  let module String = Stdlib.String in
+  let parse s = if s = "" then None else Some ((String.trim >> f) s) in
+  String.split_on_char sep s |> filter_map parse
 
 module Infix = struct
   (* List.map operator: *)
