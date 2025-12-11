@@ -20,7 +20,7 @@ let is_game_possible (g : game) : bool =
   let is_cube_possible ((n, c) : int * color) : bool =
     match c with Red -> n <= 12 | Green -> n <= 13 | Blue -> n <= 14
   in
-  g.cubes |> List.flatten ||> is_cube_possible |> List.all
+  g.cubes |> List.flatten |> List.all is_cube_possible
 
 let fewest_cubes (g : game) : int * int * int =
   let cube_triple (n, c) =

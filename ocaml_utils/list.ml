@@ -20,9 +20,19 @@ let enumerate (l : 'a list) : (int * 'a) list = mapi Pair.pack l
 let rec last (l : 'a list) : 'a =
   match l with [] -> raise (Failure "last") | [ x ] -> x | _ :: xs -> last xs
 
+(* Checks if any element in [l] matches the predicate [f]. *)
+let rec any (f : 'a -> bool) (ls : 'a list) : bool =
+  match ls with
+  | l :: ls' -> if f l then true else (any [@tailcall]) f ls'
+  | [] -> false
+
+(* Checks if all elements in [l] matches the predicate [f]. *)
+let rec all (f : 'a -> bool) (ls : 'a list) : bool =
+  match ls with
+  | l :: ls' -> if f l then (all [@tailcall]) f ls' else false
+  | [] -> true
+
 (* Convenient reducers: *)
-let any (l : bool list) : bool = fold_left ( || ) false l
-let all (l : bool list) : bool = fold_left ( && ) true l
 let sum (l : int list) : int = fold_left ( + ) 0 l
 let product (l : int list) : int = fold_left ( * ) 1 l
 let max (l : int list) : int = fold_left max min_int l

@@ -23,7 +23,7 @@ let will_evaluate (ops : (int -> int -> int) list) (eq : equation) : bool =
     let apply_op l r op = op l r in
     let recurse tl n = will_evaluate' solution (n :: tl) in
     match args with
-    | l :: r :: tl -> ops ||> apply_op l r ||> recurse tl |> List.any
+    | l :: r :: tl -> List.any (apply_op l r >> recurse tl) ops
     | [ n ] -> n = solution
   in
   will_evaluate' eq.solution eq.args

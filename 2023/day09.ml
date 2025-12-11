@@ -9,7 +9,7 @@ let puzzle_input = Io.read_lines "2023/data/09.txt" ||> List.of_string
  * Part 1
  *)
 let derivative = List.pair_map ( - )
-let all_zeros (values : int list) = values ||> ( = ) 0 |> List.all
+let all_zeros = List.all (( = ) 0)
 
 let rec next_step (values : int list) : int =
   let deltas = derivative values in

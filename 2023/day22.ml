@@ -101,9 +101,9 @@ let safe_to_disintegrate (bricks : brick list) : int =
     match BrickMap.find_opt bottom by_bottom with
     | None -> true
     | Some bs ->
-        bs
-        ||> (fun top -> BrickMap.find top by_top |> List.length |> Fn.gt 1)
-        |> List.all
+        List.all
+          (fun top -> BrickMap.find top by_top |> List.length |> Fn.gt 1)
+          bs
   in
   List.count safe bricks
 

@@ -16,8 +16,8 @@ let find_intersections (scaffold : char matrix) =
   let is_intersection (pos : coord) (c : char) : bool =
     let open Coord in
     c = '#'
-    && dirs ||> step pos ||> Matrix.get_opt scaffold ||> ( = ) (Some '#')
-       |> List.all
+    && dirs ||> step pos ||> Matrix.get_opt scaffold
+       |> List.all (( = ) (Some '#'))
   in
   Matrix.findi_all is_intersection scaffold
 

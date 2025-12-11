@@ -56,7 +56,7 @@ let get_starting_nodes (m : map) : string list =
   m.nodes ||> (fun n -> n.name) |> List.filter (String.ends_with ~suffix:"A")
 
 let reached_ending_nodes (nodes : string list) : bool =
-  nodes ||> String.ends_with ~suffix:"Z" |> List.all
+  List.all (String.ends_with ~suffix:"Z") nodes
 
 let count_ghost_steps (m : map) =
   (* We assume there are unique cycles for each path; then check for the

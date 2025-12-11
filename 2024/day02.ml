@@ -14,14 +14,14 @@ let rec diffs ls =
 let is_same_sign ds =
   let (d :: ds) = ds in
   let same_sign' = if d < 0 then Fn.lt 0 else Fn.gt 0 in
-  ds ||> same_sign' |> List.all
+  List.all same_sign' ds
 
 let is_small ds =
   let is_small' d =
     let d' = Int.abs d in
     1 <= d' && d' <= 3
   in
-  ds ||> is_small' |> List.all
+  List.all is_small' ds
 
 let is_safe ls =
   let ds = diffs ls in
@@ -38,7 +38,7 @@ let safe_after_removal ls =
   let same_sign = if d < 0 then Fn.lt 0 else Fn.gt 0 in
   let is_small d' = Int.abs d' <= 3 in
   let is_valid d' = same_sign d' && is_small d' in
-  let is_safe_tail ds' = ds' ||> is_valid |> List.all in
+  let is_safe_tail ds' = List.all is_valid ds' in
   (* Search for the first unsafe diff, then validate the tail after removal. *)
   let rec is_safe' ds' =
     match ds' with
