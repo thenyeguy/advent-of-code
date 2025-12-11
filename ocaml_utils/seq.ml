@@ -10,4 +10,5 @@ let range ?(from : int = 0) (to_ : int) : int t =
   else init (from - to_) (fun i -> from - i)
 
 (* Creates a seq containing integers [from,to] *)
-let irange ?(from : int = 0) (to_ : int) : int t = range ~from (to_ + 1)
+let irange ?(from : int = 0) (to_ : int) : int t =
+  if from < to_ then range ~from (to_ + 1) else range ~from (to_ - 1)

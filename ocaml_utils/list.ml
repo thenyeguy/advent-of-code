@@ -72,6 +72,8 @@ let pair_map (f : 'a -> 'a -> 'b) (l : 'a list) =
 let group (g : 'a -> 'a -> bool) (l : 'a list) : 'a list list =
   l |> to_seq |> Seq.group g |> of_seq |> map of_seq
 
+(* List equivalent to Seq.zip *)
+
 (* Triple equivalents to pair operations: *)
 let split3 (l : ('a * 'b * 'c) list) : 'a list * 'b list * 'c list =
   let xs (x, _, _) = x in
