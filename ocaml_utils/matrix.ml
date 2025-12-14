@@ -30,6 +30,13 @@ let size (m : 'a t) : Coord.t = (rows m, cols m)
 let get (m : 'a t) ((row, col) : Coord.t) : 'a = m.(row).(col)
 let set (m : 'a t) ((row, col) : Coord.t) (v : 'a) : unit = m.(row).(col) <- v
 
+(* Get's the [ith] row of [m] *)
+let row : 'a t -> int -> 'a array = Array.get
+
+(* Get's the [ith] col of [m] *)
+let col (m : 'a t) (c : int) : 'a array =
+  Array.map (fun row -> Array.get row c) m
+
 let in_bounds (m : 'a t) ((row, col) : Coord.t) =
   0 <= row && row < rows m && 0 <= col && col < cols m
 

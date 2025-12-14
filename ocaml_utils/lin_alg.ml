@@ -1,27 +1,50 @@
-(* Solves the vector equation A*x=b for x using gaussian elimination. *)
-let solve (a : float Matrix.t) (b : float array) : float array =
-  let rows, cols = Matrix.size a in
-  let m = Array.map2 Array.append a (Array.map (fun n -> [| n |]) b) in
-  let zero_out row col =
-    assert (abs_float m.(col).(col) > 0.);
-    let scale = m.(row).(col) /. m.(col).(col) in
-    let sub c v = v -. (scale *. m.(col).(c)) in
-    Array.mapi_inplace sub m.(row)
+(* Augments a linear system of equations [a] with its solutions [b]. *)
+let augment (a : float Matrix.t) (b : float array) : float Matrix.t =
+  Array.map2 Array.append a (Array.map (fun n -> [| n |]) b)
+
+(* Converts [m] in-place to (reduced) row-echelon form. *)
+let to_row_echelon_form (m : float Matrix.t) =
+  let swap i j =
+    let mi = m.(i) in
+    m.(i) <- m.(j);
+    m.(j) <- mi
   in
-  (* Forward elimination: convert to row-echelon form. *)
-  for row = 1 to rows - 1 do
-    for col = 0 to row - 1 do
-      zero_out row col
-    done
-  done;
-  (* Back substitution: convert to trianglar form. *)
-  for row = rows - 1 downto 0 do
-    for col = cols - 1 downto row + 1 do
-      zero_out row col
-    done
-  done;
-  (* Extract x from the final column. *)
-  let solve' i row = Array.get row cols /. Array.get row i in
+  let scale i s = Array.map_inplace (( *. ) s) m.(i) in
+  let add i j s = m.(i) <- Array.map2 (fun a b -> a +. (s *. b)) m.(i) m.(j) in
+  let rows, cols = Matrix.size m in
+  let row = ref 0 in
+  for col = 0 to cols - 2 do
+    (* Find a row with the pivot.*)
+    let new_pivot = ref !row in
+    while !new_pivot < rows && m.(!new_pivot).(col) = 0.0 do
+      incr new_pivot
+    done;
+
+    (* If we found a pivot, handle it; otherwise, try the next column. *)
+    if !new_pivot < rows then begin
+      (* Normalize the current row. *)
+      swap !row !new_pivot;
+      scale !row (1. /. m.(!row).(col));
+      (* Zero out the remaining rows. *)
+      for row' = 0 to rows - 1 do
+        if row' != !row then add row' !row (-1.0 *. m.(row').(col))
+      done;
+      incr row
+    end
+  done
+
+(* Solves the vector equation A*x=b for x. Assumes a unique solution exists. *)
+let solve (a : float Matrix.t) (b : float array) : float array =
+  assert (Matrix.rows a = Matrix.cols a);
+  assert (Matrix.rows a = Array.length b);
+  let cols = Matrix.cols a in
+  let m = augment a b in
+  to_row_echelon_form m;
+  let solve' i row =
+    let s = Array.get row i in
+    assert (s > 0.);
+    Array.get row cols /. s
+  in
   Array.mapi solve' m
 
 (* Numerically finds a solution to a system of equations f, given:

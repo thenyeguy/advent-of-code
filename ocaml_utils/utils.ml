@@ -3,6 +3,7 @@
  *)
 
 (* Import all modules. *)
+module Array = Array
 module Char = Char
 module Coord = Coord
 module Fn = Fn
